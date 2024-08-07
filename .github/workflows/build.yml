@@ -1,0 +1,73 @@
+name: Run autotest on multiple OS and architectures
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+            arch: aarch64
+            target: aarch64-apple-darwin
+          - os: windows-latest
+            arch: x86_64
+            target: x86_64-pc-windows-msvc
+          - os: ubuntu-latest
+            arch: x86_64
+            target: x86_64-unknown-linux-gnu
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install Ruby on macOS
+      if: matrix.os == 'macos-latest'
+      run: |
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        brew install ruby
+
+    - name: Install Ruby on Windows
+      if: matrix.os == 'windows-latest'
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.0'
+
+    - name: Install Ruby on Ubuntu
+      if: matrix.os == 'ubuntu-latest'
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.0'
+
+    - name: Update RubyGems and Bundler
+      run: |
+        gem update --system
+        gem install bundler
+
+    - name: Install dependencies and build gem on macOS
+      if: matrix.os == 'macos-latest'
+      run: |
+        bundle install
+        bundle exec rake build
+
+    - name: Install dependencies and build gem on Windows
+      if: matrix.os == 'windows-latest'
+      run: |
+        bundle install
+        bundle exec rake build
+
+    - name: Install dependencies and build gem on Ubuntu
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        bundle install
+        bundle exec rake build
+
+    - name: Install gem
+      run: |
+        gem install pkg/crud_jt-0.1.0.gem
+
+    - name: Run tests
+      run: |
+        ruby authotest.rb
