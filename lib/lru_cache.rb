@@ -17,7 +17,7 @@ class LRUCache
       output = {}
 
       if cached_value.dig('metadata', 'ttl')
-        ttl = (cached_value['metadata']['ttl'] - Time.now).ceil
+        ttl = (cached_value['metadata']['ttl'].to_i - Time.now.to_i).ceil
         if ttl <= 0
           cache.delete(token)
           return
