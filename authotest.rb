@@ -118,3 +118,16 @@ REQUESTS = 40_000
   p 'when deletes 40k tokens'
   puts Benchmark.measure { REQUESTS.times { |i| CRUD_JT.delete(tokens[i]) } }
 end
+
+# when cache after read from file system
+p 'when caches after read from file system'
+
+LIMIT_ON_READY_FOR_CACHE = 2
+
+data = {user_id: 414243, role: 11, devices: {ios_expired_at: Time.now.to_s, android_expired_at: Time.now.to_s, mobile_app_expired_at: Time.now.to_s, external_api_integration_expired_at: Time.now.to_s}, a: 42}
+previus_tokens = []
+
+REQUESTS.times { previus_tokens << CRUD_JT.create(data) }
+REQUESTS.times { CRUD_JT.create(data) }
+
+LIMIT_ON_READY_FOR_CACHE.times { puts Benchmark.measure { REQUESTS.times { |i| CRUD_JT.read(previus_tokens[i]) } } }

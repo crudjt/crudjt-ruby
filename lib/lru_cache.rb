@@ -58,6 +58,10 @@ class LRUCache
     cache[key] = hash
   end
 
+  def force_insert(token, hash)
+    cache[token] = hash
+  end
+
   def delete(token)
     cache.delete(token)
   end

@@ -52,13 +52,13 @@ module CRUD_JT
 
   @lru_cache = LRUCache.new(lambda { |token| __read(token) })
 
-  def self.create(big_o_fucking_hash, ttl: nil, silence_read: nil)
-    Validation.validate_insertion!(big_o_fucking_hash, ttl, silence_read)
+  def self.create(hash, ttl: nil, silence_read: nil)
+    Validation.validate_insertion!(hash, ttl, silence_read)
 
     ttl ||= -1
     silence_read ||= -1
 
-    packed_data = MessagePack.pack(big_o_fucking_hash)
+    packed_data = MessagePack.pack(hash)
 
     # Creation buffer with packed data
     buffer = FFI::MemoryPointer.new(:char, packed_data.bytesize)
@@ -66,7 +66,7 @@ module CRUD_JT
 
     token = __create(buffer, packed_data.bytesize, ttl, silence_read)
 
-    @lru_cache.insert(token, big_o_fucking_hash, ttl, silence_read)
+    @lru_cache.insert(token, hash, ttl, silence_read)
 
     token
   end
@@ -81,20 +81,23 @@ module CRUD_JT
     return if str.empty?
 
   	result = JSON.parse(str)
-    result.size > 0 ? result : nil
+    if result.size > 0
+      @lru_cache.force_insert(token, result)
+      result
+    end
   end
 
-  def self.update(token, big_o_fucking_hash, ttl: nil, silence_read: nil)
+  def self.update(token, hash, ttl: nil, silence_read: nil)
     Validation.validate_token!(token)
-    Validation.validate_insertion!(big_o_fucking_hash, ttl, silence_read)
+    Validation.validate_insertion!(hash, ttl, silence_read)
 
     ttl ||= -1
     silence_read ||= -1
 
     @lru_cache.delete(token)
-    @lru_cache.insert(token, big_o_fucking_hash, ttl, silence_read)
+    @lru_cache.insert(token, hash, ttl, silence_read)
 
-    packed_data = MessagePack.pack(big_o_fucking_hash)
+    packed_data = MessagePack.pack(hash)
 
     # Creation buffer with packed data
     buffer = FFI::MemoryPointer.new(:char, packed_data.bytesize)
