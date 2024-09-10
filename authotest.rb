@@ -48,6 +48,9 @@ p CRUD_JT.read(token) == nil
 p CRUD_JT.update(token, data) == false
 p CRUD_JT.delete(token) == false
 
+p CRUD_JT.update(token, data) == false
+p CRUD_JT.read(token) == nil
+
 # with silence read
 p "Checkinh silence read..."
 

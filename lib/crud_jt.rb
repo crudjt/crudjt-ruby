@@ -94,16 +94,18 @@ module CRUD_JT
     ttl ||= -1
     silence_read ||= -1
 
-    @lru_cache.delete(token)
-    @lru_cache.insert(token, hash, ttl, silence_read)
-
     packed_data = MessagePack.pack(hash)
 
     # Creation buffer with packed data
     buffer = FFI::MemoryPointer.new(:char, packed_data.bytesize)
     buffer.put_bytes(0, packed_data)
 
-    __update(token, buffer, packed_data.bytesize, ttl, silence_read)
+    result = __update(token, buffer, packed_data.bytesize, ttl, silence_read)
+    if result
+      @lru_cache.delete(token)
+      @lru_cache.insert(token, hash, ttl, silence_read)
+    end
+    result
   end
 
   def self.delete(token)
