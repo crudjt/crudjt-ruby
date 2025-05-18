@@ -6,7 +6,9 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
+    ffi (1.17.2)
     lru_redux (1.1.0)
+    msgpack (1.8.0)
     rake (12.3.3)
 
 PLATFORMS
@@ -14,7 +16,9 @@ PLATFORMS
 
 DEPENDENCIES
   crud_jt!
+  ffi
   lru_redux
+  msgpack
   rake (~> 12.0)
 
 BUNDLED WITH

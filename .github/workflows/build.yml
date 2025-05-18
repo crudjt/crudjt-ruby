@@ -43,6 +43,7 @@ jobs:
 
     - name: Update RubyGems and Bundler
       run: |
+        gem update --system
         gem install bundler
 
     - name: Install dependencies and build gem on macOS
