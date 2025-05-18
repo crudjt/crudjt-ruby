@@ -43,7 +43,33 @@ module CRUD_JT
 
   load_store_jt_library
 
-  attach_function :encrypted_key, [:string], :void
+  module Config
+    extend FFI::Library
+
+    load_store_jt_library
+
+    attach_function :__encrypted_key, [:string], :void
+    attach_function :__store_jt_path, [:string], :void
+
+    @settings = {}
+
+    class << self
+      def encrypted_key(value)
+        @settings[:encrypted_key] = value
+        self
+      end
+
+      def store_jt_path(value)
+        @settings[:store_jt_path] = value
+        self
+      end
+
+      def start!
+        __store_jt_path(@settings[:store_jt_path]) if @settings[:store_jt_path]
+        __encrypted_key(@settings[:encrypted_key])
+      end
+    end
+  end
 
   attach_function :__create, [:pointer, :size_t, :int, :int], :string
   attach_function :__read, [:string], :string
@@ -78,7 +104,7 @@ module CRUD_JT
     return output if output
 
     str = __read(token)
-    return if str.empty?
+    return if str.nil?
 
   	result = JSON.parse(str)
     if result.size > 0
@@ -114,6 +140,4 @@ module CRUD_JT
     @lru_cache.delete(token)
     __delete(token)
   end
-
-  encrypted_key('Cm7B68NWsMNNYjzMDREacmpe5sI1o0g40ZC9w1yQW3WOes7Gm59UsittLOHR2dciYiwmaYq98l3tG8h9yXVCxg==')
 end
