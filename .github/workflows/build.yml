@@ -50,7 +50,8 @@ jobs:
       run: |
         bundle install
         bundle exec rake build
-        mkdir -p /usr/local/var/store_jt
+        sudo mkdir -p /usr/local/var/store_jt
+        sudo chmod -R u+rw /usr/local/var/store_jt
 
     - name: Install dependencies and build gem on Windows
       if: matrix.os == 'windows-latest'
