@@ -10,12 +10,12 @@ jobs:
           - os: macos-latest
             arch: aarch64
             target: aarch64-apple-darwin
-          # - os: windows-latest
-          #   arch: x86_64
-          #   target: x86_64-pc-windows-msvc
-          # - os: ubuntu-latest
-          #   arch: x86_64
-          #   target: x86_64-unknown-linux-gnu
+          - os: windows-latest
+            arch: x86_64
+            target: x86_64-pc-windows-msvc
+          - os: ubuntu-latest
+            arch: x86_64
+            target: x86_64-unknown-linux-gnu
 
     runs-on: ${{ matrix.os }}
 
@@ -50,8 +50,6 @@ jobs:
       run: |
         bundle install
         bundle exec rake build
-        sudo mkdir -p /usr/local/var/store_jt
-        sudo chmod -R u+rw /usr/local/var/store_jt
 
     - name: Install dependencies and build gem on Windows
       if: matrix.os == 'windows-latest'
