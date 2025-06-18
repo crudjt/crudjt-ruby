@@ -85,12 +85,14 @@ module CRUD_JT
     silence_read ||= -1
 
     packed_data = MessagePack.pack(hash)
+    hash_bytesize = packed_data.bytesize
+    Validation.validate_hash_bytesize!(hash_bytesize)
 
     # Creation buffer with packed data
-    buffer = FFI::MemoryPointer.new(:char, packed_data.bytesize)
+    buffer = FFI::MemoryPointer.new(:char, hash_bytesize)
     buffer.put_bytes(0, packed_data)
 
-    token = __create(buffer, packed_data.bytesize, ttl, silence_read)
+    token = __create(buffer, hash_bytesize, ttl, silence_read)
 
     @lru_cache.insert(token, hash, ttl, silence_read)
 
@@ -117,16 +119,18 @@ module CRUD_JT
     Validation.validate_token!(token)
     Validation.validate_insertion!(hash, ttl, silence_read)
 
+    packed_data = MessagePack.pack(hash)
+    hash_bytesize = packed_data.bytesize
+    Validation.validate_hash_bytesize!(hash_bytesize)
+
     ttl ||= -1
     silence_read ||= -1
 
-    packed_data = MessagePack.pack(hash)
-
     # Creation buffer with packed data
-    buffer = FFI::MemoryPointer.new(:char, packed_data.bytesize)
+    buffer = FFI::MemoryPointer.new(:char, hash_bytesize)
     buffer.put_bytes(0, packed_data)
 
-    result = __update(token, buffer, packed_data.bytesize, ttl, silence_read)
+    result = __update(token, buffer, hash_bytesize, ttl, silence_read)
     if result
       @lru_cache.delete(token)
       @lru_cache.insert(token, hash, ttl, silence_read)

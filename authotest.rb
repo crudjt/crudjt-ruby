@@ -8,6 +8,34 @@ CRUD_JT::Config.encrypted_key('Cm7B68NWsMNNYjzMDREacmpe5sI1o0g40ZC9w1yQW3WOes7Gm
 p "OS: #{RbConfig::CONFIG['host_os']}"
 p "CPU: #{RbConfig::CONFIG['host_cpu']}"
 
+# validations
+p 'Checking validations...'
+
+# hash can not be empty
+begin
+  CRUD_JT.create({})
+rescue RuntimeError => error
+  p error.message == "Hash can not be empty"
+else
+  p false
+end
+
+# hash can not be bigger than maximum size
+begin
+  hash_with_unlim_size = { some_key: 'q' * Validation::MAX_HASH_SIZE }
+  hash_bytesize = MessagePack.pack(hash_with_unlim_size).bytesize
+
+  while MessagePack.pack(hash_with_unlim_size).bytesize > Validation::MAX_HASH_SIZE + 1
+    hash_with_unlim_size[:some_key].chop!
+  end
+
+  CRUD_JT.create(hash_with_unlim_size)
+rescue RuntimeError => error
+  p error.message == "Hash can not be bigger than #{Validation::MAX_HASH_SIZE} bytesize"
+else
+  p false
+end
+
 # without metadata
 p 'Checking without metadata...'
 data = { user_id: 42, role: 11 }
@@ -91,10 +119,16 @@ p CRUD_JT.read(token_with_ttl_and_silence_read) == nil
 
 REQUESTS = 40_000
 
+data = {user_id: 414243, role: 11, devices: {ios_expired_at: Time.now.to_s, android_expired_at: Time.now.to_s, external_api_integration_expired_at: Time.now.to_s}, a: "a" * 100 }
+while MessagePack.pack(data).bytesize > Validation::MAX_HASH_SIZE
+  data[:a].chop!
+end
+
+updated_data = { user_id: 42, role: 11 }
+
+p "Hash bytesize: #{MessagePack.pack(data).bytesize}"
 10.times do
   tokens = []
-  data = {user_id: 414243, role: 11, devices: {ios_expired_at: Time.now.to_s, android_expired_at: Time.now.to_s, mobile_app_expired_at: Time.now.to_s, external_api_integration_expired_at: Time.now.to_s}, a: 42}
-  updated_data = { user_id: 42, role: 11 }
 
   p 'Checking scale load...'
 
@@ -130,7 +164,6 @@ p 'when caches after read from file system'
 
 LIMIT_ON_READY_FOR_CACHE = 2
 
-data = {user_id: 414243, role: 11, devices: {ios_expired_at: Time.now.to_s, android_expired_at: Time.now.to_s, mobile_app_expired_at: Time.now.to_s, external_api_integration_expired_at: Time.now.to_s}, a: 42}
 previus_tokens = []
 
 REQUESTS.times { previus_tokens << CRUD_JT.create(data) }
