@@ -51,6 +51,10 @@ module CRUD_JT
     attach_function :__encrypted_key, [:string], :void
     attach_function :__store_jt_path, [:string], :void
 
+    # attr_reader :was_started, :error_message
+
+    ERROR_MESSAGE = "CRUD_JT already started".freeze
+
     @settings = {}
 
     class << self
@@ -64,9 +68,16 @@ module CRUD_JT
         self
       end
 
+      def was_started
+        @was_started
+      end
+
       def start!
+        raise ERROR_MESSAGE if was_started
+
         __store_jt_path(@settings[:store_jt_path]) if @settings[:store_jt_path]
         __encrypted_key(@settings[:encrypted_key])
+        @was_started = true
       end
     end
   end
@@ -79,6 +90,7 @@ module CRUD_JT
   @lru_cache = LRUCache.new(lambda { |token| __read(token) })
 
   def self.create(hash, ttl: nil, silence_read: nil)
+    raise CRUD_JT::Config::ERROR_MESSAGE unless CRUD_JT::Config.was_started
     Validation.validate_insertion!(hash, ttl, silence_read)
 
     ttl ||= -1
@@ -100,6 +112,7 @@ module CRUD_JT
   end
 
   def self.read(token)
+    raise CRUD_JT::Config::ERROR_MESSAGE unless CRUD_JT::Config.was_started
     Validation.validate_token!(token)
 
     output = @lru_cache.get(token)
@@ -116,6 +129,7 @@ module CRUD_JT
   end
 
   def self.update(token, hash, ttl: nil, silence_read: nil)
+    raise CRUD_JT::Config::ERROR_MESSAGE unless CRUD_JT::Config.was_started
     Validation.validate_token!(token)
     Validation.validate_insertion!(hash, ttl, silence_read)
 
@@ -139,6 +153,7 @@ module CRUD_JT
   end
 
   def self.delete(token)
+    raise CRUD_JT::Config::ERROR_MESSAGE unless CRUD_JT::Config.was_started
     Validation.validate_token!(token)
 
     @lru_cache.delete(token)

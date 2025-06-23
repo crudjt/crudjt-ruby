@@ -36,6 +36,17 @@ else
   p false
 end
 
+# describe encrypted_key
+# when started
+begin
+  CRUD_JT::Config.encrypted_key('bla-bla-bla').start!
+rescue RuntimeError => error
+  p error.message == CRUD_JT::Config::ERROR_MESSAGE
+else
+  p false
+end
+
+
 # without metadata
 p 'Checking without metadata...'
 data = { user_id: 42, role: 11 }
