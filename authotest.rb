@@ -46,6 +46,11 @@ else
   p false
 end
 
+# with wrong token
+p CRUD_JT.read('bla-bla-bla') == nil
+p CRUD_JT.update('bla-bla-bla', { some_key: 41 }) == false
+p CRUD_JT.delete('bla-bla-bla') == false
+
 
 # without metadata
 p 'Checking without metadata...'
