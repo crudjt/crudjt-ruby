@@ -1,3 +1,5 @@
+require 'base64'
+
 module Validation
   U64_MAX = 2**64 - 1
 
@@ -20,5 +22,19 @@ module Validation
   def validate_token!(token)
     raise "Token must be String" unless token.is_a?(String)
     raise "Token cant be blank" if token.size < 1
+  end
+
+  def validate_encrypted_key!(key)
+    begin
+      decoded = Base64.strict_decode64(key)
+    rescue ArgumentError
+      raise ArgumentError, "'encrypted_key' must be a valid Base64 string"
+    end
+
+    unless [32, 48, 64].include?(decoded.bytesize)
+      raise ArgumentError, "'encrypted_key' must be exactly 32, 48, or 64 bytes. Got #{decoded.bytesize} bytes"
+    end
+
+    true
   end
 end

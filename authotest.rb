@@ -2,14 +2,43 @@ require 'benchmark'
 # require_relative 'embed.rb'
 require 'crud_jt'
 
-CRUD_JT::Config.encrypted_key('Cm7B68NWsMNNYjzMDREacmpe5sI1o0g40ZC9w1yQW3WOes7Gm59UsittLOHR2dciYiwmaYq98l3tG8h9yXVCxg==')
-               .start!
-
 p "OS: #{RbConfig::CONFIG['host_os']}"
 p "CPU: #{RbConfig::CONFIG['host_cpu']}"
 
+p 'Checking encrypted key validations...'
+# when started without encrypted key
+begin
+  CRUD_JT::Config.start!
+rescue RuntimeError => error
+  p error.message == CRUD_JT::Config::ENCRYPTED_KEY_ERROR_MESSAGE
+else
+  p false
+end
+
+# when started with fake base64 encrypted key
+begin
+  CRUD_JT::Config.encrypted_key('bla-bla-bla').start!
+rescue ArgumentError => error
+  p error.message == "'encrypted_key' must be a valid Base64 string"
+else
+  p false
+end
+
+# when started with wrong encrypted key lenght
+begin
+  key_16_bytes = '2v+XIslTkPTfjva0xeCLHQ=='
+  CRUD_JT::Config.encrypted_key(key_16_bytes).start!
+rescue ArgumentError => error
+  p error.message == "'encrypted_key' must be exactly 32, 48, or 64 bytes. Got #{Base64.strict_decode64(key_16_bytes).bytesize} bytes"
+else
+  p false
+end
+
+CRUD_JT::Config.encrypted_key('Cm7B68NWsMNNYjzMDREacmpe5sI1o0g40ZC9w1yQW3WOes7Gm59UsittLOHR2dciYiwmaYq98l3tG8h9yXVCxg==')
+               .start!
+
 # validations
-p 'Checking validations...'
+p 'Checking base validations...'
 
 # hash can not be empty
 begin
@@ -39,7 +68,7 @@ end
 # describe encrypted_key
 # when started
 begin
-  CRUD_JT::Config.encrypted_key('bla-bla-bla').start!
+  CRUD_JT::Config.start!
 rescue RuntimeError => error
   p error.message == CRUD_JT::Config::ERROR_MESSAGE
 else

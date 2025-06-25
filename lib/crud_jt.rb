@@ -54,11 +54,14 @@ module CRUD_JT
     # attr_reader :was_started, :error_message
 
     ERROR_MESSAGE = "CRUD_JT already started".freeze
+    ENCRYPTED_KEY_ERROR_MESSAGE = 'encrypted_key is not set'.freeze
 
     @settings = {}
 
     class << self
       def encrypted_key(value)
+        Validation.validate_encrypted_key!(value)
+
         @settings[:encrypted_key] = value
         self
       end
@@ -73,6 +76,7 @@ module CRUD_JT
       end
 
       def start!
+        raise ENCRYPTED_KEY_ERROR_MESSAGE unless @settings[:encrypted_key]
         raise ERROR_MESSAGE if was_started
 
         __store_jt_path(@settings[:store_jt_path]) if @settings[:store_jt_path]
