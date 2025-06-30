@@ -10,7 +10,7 @@ p 'Checking encrypted key validations...'
 begin
   CRUD_JT::Config.start!
 rescue RuntimeError => error
-  p error.message == CRUD_JT::Config::ENCRYPTED_KEY_ERROR_MESSAGE
+  p error.message == Validation.error_message(Validation::ERROR_ENCRYPTED_KEY_NOT_SET)
 else
   p false
 end
@@ -34,11 +34,24 @@ else
   p false
 end
 
-CRUD_JT::Config.encrypted_key('Cm7B68NWsMNNYjzMDREacmpe5sI1o0g40ZC9w1yQW3WOes7Gm59UsittLOHR2dciYiwmaYq98l3tG8h9yXVCxg==')
-               .start!
-
 # validations
 p 'Checking base validations...'
+
+# when not started store_jt
+begin
+  CRUD_JT.create({ some_key: 'some value' })
+rescue RuntimeError => error
+  p error.message == Validation.error_message(Validation::ERROR_NOT_STARTED)
+else
+  p false
+end
+
+begin
+  CRUD_JT::Config.encrypted_key('Cm7B68NWsMNNYjzMDREacmpe5sI1o0g40ZC9w1yQW3WOes7Gm59UsittLOHR2dciYiwmaYq98l3tG8h9yXVCxg==')
+                 .start!
+rescue => e
+  p e.message
+end
 
 # hash can not be empty
 begin
@@ -70,7 +83,7 @@ end
 begin
   CRUD_JT::Config.start!
 rescue RuntimeError => error
-  p error.message == CRUD_JT::Config::ERROR_MESSAGE
+  p error.message == Validation.error_message(Validation::ERROR_ALREADY_STARTED)
 else
   p false
 end
