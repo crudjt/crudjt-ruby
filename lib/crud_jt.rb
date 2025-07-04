@@ -48,10 +48,7 @@ module CRUD_JT
 
     load_store_jt_library
 
-    attach_function :__encrypted_key, [:string], :void
-    attach_function :__store_jt_path, [:string], :void
-
-    # attr_reader :was_started, :error_message
+    attach_function :start_store_jt, [:string, :string], :string
 
     @settings = {}
 
@@ -80,8 +77,9 @@ module CRUD_JT
         raise Validation.error_message(Validation::ERROR_ENCRYPTED_KEY_NOT_SET) unless @settings[:encrypted_key]
         raise Validation.error_message(Validation::ERROR_ALREADY_STARTED) if was_started
 
-        __store_jt_path(@settings[:store_jt_path]) if @settings[:store_jt_path]
-        __encrypted_key(@settings[:encrypted_key])
+        result = JSON(start_store_jt(@settings[:encrypted_key], @settings[:store_jt_path]))
+        raise result['message'] if result['status'].zero?
+
         @was_started = true
       end
     end
@@ -95,7 +93,7 @@ module CRUD_JT
   @lru_cache = LRUCache.new(lambda { |token| __read(token) })
 
   def self.create(hash, ttl: nil, silence_read: nil)
-    raise Validation.error_message(Validation::ERROR_NOT_STARTED) unless CRUD_JT::Config.check_encrypted_key
+    raise Validation.error_message(Validation::ERROR_NOT_STARTED) unless CRUD_JT::Config.was_started
     Validation.validate_insertion!(hash, ttl, silence_read)
 
     ttl ||= -1
@@ -117,7 +115,7 @@ module CRUD_JT
   end
 
   def self.read(token)
-    raise Validation.error_message(Validation::ERROR_NOT_STARTED) unless CRUD_JT::Config.check_encrypted_key
+    raise Validation.error_message(Validation::ERROR_NOT_STARTED) unless CRUD_JT::Config.was_started
     Validation.validate_token!(token)
 
     output = @lru_cache.get(token)
@@ -134,7 +132,7 @@ module CRUD_JT
   end
 
   def self.update(token, hash, ttl: nil, silence_read: nil)
-    raise Validation.error_message(Validation::ERROR_NOT_STARTED) unless CRUD_JT::Config.check_encrypted_key
+    raise Validation.error_message(Validation::ERROR_NOT_STARTED) unless CRUD_JT::Config.was_started
     Validation.validate_token!(token)
     Validation.validate_insertion!(hash, ttl, silence_read)
 
@@ -158,7 +156,7 @@ module CRUD_JT
   end
 
   def self.delete(token)
-    raise Validation.error_message(Validation::ERROR_NOT_STARTED) unless CRUD_JT::Config.check_encrypted_key
+    raise Validation.error_message(Validation::ERROR_NOT_STARTED) unless CRUD_JT::Config.was_started
     Validation.validate_token!(token)
 
     @lru_cache.delete(token)
