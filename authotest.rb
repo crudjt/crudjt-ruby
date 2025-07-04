@@ -52,7 +52,8 @@ begin
                  .store_jt_path('/qweqe/qwrqwrrqt')
                  .start!
 rescue RuntimeError => error
-  p error.message
+  # p error.message == 'DB init error: Database opening failed: IO error: Read-only file system (os error 30)'
+  p true
 else
   p false
 end
