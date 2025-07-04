@@ -51,7 +51,7 @@ begin
   CRUD_JT::Config.encrypted_key('Cm7B68NWsMNNYjzMDREacmpe5sI1o0g40ZC9w1yQW3WOes7Gm59UsittLOHR2dciYiwmaYq98l3tG8h9yXVCxg==')
                  .store_jt_path('/qweqe/qwrqwrrqt')
                  .start!
-rescue RuntimeError => error
+rescue => error
   # p error.message == 'DB init error: Database opening failed: IO error: Read-only file system (os error 30)'
   p true
 else
@@ -60,7 +60,7 @@ end
     # when not started store_jt
     begin
       CRUD_JT.create({ some_key: 'some value' })
-    rescue RuntimeError => error
+    rescue => error
       p error.message == Validation.error_message(Validation::ERROR_NOT_STARTED)
     else
       p false
