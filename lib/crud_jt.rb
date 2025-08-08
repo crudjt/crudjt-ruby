@@ -4,6 +4,7 @@ require 'msgpack'
 
 require_relative 'lru_cache'
 require_relative 'validation'
+require_relative 'errors'
 
 include Validation
 
@@ -78,7 +79,7 @@ module CRUD_JT
         raise Validation.error_message(Validation::ERROR_ALREADY_STARTED) if was_started
 
         result = JSON(start_store_jt(@settings[:encrypted_key], @settings[:store_jt_path]))
-        raise result['message'] if result['status'].zero?
+        raise ERRORS[result['code']], result['error_message'] unless result['ok']
 
         @was_started = true
       end
@@ -108,6 +109,7 @@ module CRUD_JT
     buffer.put_bytes(0, packed_data)
 
     token = __create(buffer, hash_bytesize, ttl, silence_read)
+    raise CRUD_JT::Errors::InternalError, 'Something went wrong. Ups' unless token
 
     @lru_cache.insert(token, hash, ttl, silence_read)
 
@@ -125,10 +127,12 @@ module CRUD_JT
     return if str.nil?
 
   	result = JSON.parse(str)
-    if result.size > 0
-      @lru_cache.force_insert(token, result)
-      result
-    end
+    raise ERRORS[result['code']] unless result['ok']
+    return if result['data'].nil?
+
+    data = JSON(result['data'])
+    @lru_cache.force_insert(token, data)
+    data
   end
 
   def self.update(token, hash, ttl: nil, silence_read: nil)

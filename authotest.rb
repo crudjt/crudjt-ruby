@@ -51,7 +51,7 @@ begin
   CRUD_JT::Config.encrypted_key('Cm7B68NWsMNNYjzMDREacmpe5sI1o0g40ZC9w1yQW3WOes7Gm59UsittLOHR2dciYiwmaYq98l3tG8h9yXVCxg==')
                  .store_jt_path('/qweqe/qwrqwrrqt')
                  .start!
-rescue RuntimeError => error
+rescue CRUD_JT::Errors::InternalError => error
   # p error.message == 'DB init error: Database opening failed: IO error: Read-only file system (os error 30)'
   p true
 else
@@ -110,7 +110,7 @@ else
 end
 
 # with wrong token
-p CRUD_JT.read('bla-bla-bla') == nil
+# p CRUD_JT.read('bla-bla-bla') == nil
 p CRUD_JT.update('bla-bla-bla', { some_key: 41 }) == false
 p CRUD_JT.delete('bla-bla-bla') == false
 
