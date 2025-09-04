@@ -206,6 +206,7 @@ end
 updated_data = { user_id: 42, role: 11 }
 
 p "Hash bytesize: #{MessagePack.pack(data).bytesize}"
+values = []
 10.times do
   tokens = []
 
