@@ -146,14 +146,14 @@ CRUD_JT.delete("HBmKFXoXgJ46mCqer1WXyQ")
 **40k** requests with **256 bytes** for each token  
 Processor ARM64 (M1 +)
 
-|         | C | R | U | D |
-|----     |----|----|----|----|
-| CRUD JT (Ruby) | 0.3 second | 0.05 second | 0.3 second | 0.2 second |
-| JWT (C)     | 1.1 seconds | 2.8 seconds | X | X |
-| redis-session (Rust)  | 1.0 second | 0.05 second | 0.05 second  | 0.05 second |
-| Typical encryption algorithm (C)  | 1.0 second | 2.8 seconds | X | X |
+| Function | CRUD JT (Ruby) | JWT (Ruby) | redis-session-store (Rust) |
+|----------|-------|------|------|
+| C        | **0.3 second** | 1.108 seconds | 1.048 seconds |
+| R        | **0.05 second** | 2.473 seconds | **0.05 second** |
+| U        | 0.3 second | X | **0.05 second** |
+| D        | 0.2 second | X | **0.05 second** |
 
-[Benchmark tests repo]
+[Full results](https://github.com/exwarvlad/benchmarks)
 
 # Storage (Store JT)
 
