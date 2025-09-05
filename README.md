@@ -148,10 +148,10 @@ Processor ARM64 (M1 +)
 
 | Function | CRUD JT (Ruby) | JWT (Ruby) | redis-session-store (Rust) |
 |----------|-------|------|------|
-| C        | **0.3 second** | 1.108 seconds | 1.048 seconds |
-| R        | **0.05 second** | 2.473 seconds | **0.05 second** |
-| U        | 0.3 second | X | **0.05 second** |
-| D        | 0.2 second | X | **0.05 second** |
+| C        | `0.3 second` ⭐ | 1.108 seconds | 1.048 seconds |
+| R        | `0.05 second` ⭐ | 2.473 seconds | `0.05 second` ⭐ |
+| U        | 0.3 second | X | `0.05 second` ⭐ |
+| D        | 0.2 second | X | `0.05 second` ⭐ |
 
 [Full results](https://github.com/exwarvlad/benchmarks)
 
