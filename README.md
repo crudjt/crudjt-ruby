@@ -31,6 +31,7 @@ require 'crud_jt'
 # openssl rand -base64 48 # In your terminal
 # => your_encrypted_base64/48
 CRUD_JT::Config.encrypted_key('your_encrypted_base64/32/48/64')
+               .store_jt_path('custom/path/to/file_system_db') # optional
                .start!
 ```
 
@@ -160,7 +161,7 @@ Processor ARM64 (M1 +)
 ## Path Lookup Order
 Stored tokens are placed in the **file system** according to the following order
 
-1. Explicitly set via `CRUD_JT::Config.store_jt_path(...)`
+1. Explicitly set via `CRUD_JT::Config.store_jt_path('custom/path/to/file_system_db')`
 2. Default system location
    - **Linux**: `/var/lib/store_jt`
    - **macOS**: `/usr/local/var/store_jt`
@@ -171,33 +172,6 @@ Stored tokens are placed in the **file system** according to the following order
 * Store JT **automatically removing expired tokens** every 24 hours without blocking the main thread   
 * **Store JT automatically fsyncs every 500ms**, meanwhile tokens ​​are available from cache
 * Store JT is available for one process to open per instance for the time being
-
-## Configuration
-
-You can configure the library before starting it
-
-```ruby
-require "crud_jt"
-
-# Required configuration
-CRUD_JT.encrypted_key("some_base64_key")
-
-# Optional configuration
-CRUD_JT.store_jt_path("/custom/path/to/store_jt")
-
-# Start the CRUD JT and Store JT
-CRUD_JT.start!
-```
-
-
-#### `encrypted_key(base64_key)`
-Sets the encrypted key (**required**)
-
-#### `store_jt_path(path_to_db)`
-Overrides the default Store JT path (**optional**)
-
-#### `start!`
-Initializes the CRUD JT and opens the Store JT (**must be called last**)
 
 # Limits
 The library has the following limits and requirements
