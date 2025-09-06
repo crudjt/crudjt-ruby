@@ -111,7 +111,7 @@ module CRUD_JT
     token = __create(buffer, hash_bytesize, ttl, silence_read)
     raise CRUD_JT::Errors::InternalError, 'Something went wrong. Ups' unless token
 
-    @lru_cache.insert(token, hash, ttl, silence_read)
+    @lru_cache.insert(token, packed_data, ttl, silence_read)
 
     token
   end
@@ -154,7 +154,7 @@ module CRUD_JT
     result = __update(token, buffer, hash_bytesize, ttl, silence_read)
     if result
       @lru_cache.delete(token)
-      @lru_cache.insert(token, hash, ttl, silence_read)
+      @lru_cache.insert(token, packed_data, ttl, silence_read)
     end
     result
   end

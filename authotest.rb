@@ -216,20 +216,11 @@ values = []
   p 'when creates 40k tokens with Turbo Queue'
   puts Benchmark.measure { REQUESTS.times { |i| tokens << CRUD_JT.create(data) } }
 
-  # # puts CRUD_JT.read(tokens[0])
-  #
   # when read
   p 'when reads 40k tokens'
   index = rand(0..REQUESTS)
-  puts Benchmark.measure { REQUESTS.times { |i| CRUD_JT.read(tokens[index]) } }
-  #
-  # sleep 1
-  #
-  # # when reads randomly
-  # # p "when reads randomly created token"
-  # # index = rand(0...REQUESTS)
-  # # 5.times { puts Benchmark.measure { REQUESTS.times { |i| CRUD_JT.read(tokens[index]) } } }
-  # #
+  puts Benchmark.measure { REQUESTS.times { |i| CRUD_JT.read(tokens[i]) } }
+
   # when updates
   p 'when updates 40k tokens'
   puts Benchmark.measure { REQUESTS.times { |i| CRUD_JT.update(tokens[i], updated_data) } }

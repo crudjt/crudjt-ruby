@@ -11,9 +11,12 @@ class LRUCache
   def get(token)
     cached_value = cache[token]
 
+    if cached_value && cached_value[:data]
+      cached_value[:data] = MessagePack.unpack(cached_value[:data])
+      cached_value['data'] = cached_value.delete(:data)
+    end
+
     if cached_value
-      cached_value = deep_stringify_keys(cached_value) if cached_value[:data]
-      cache[token] = cached_value
       output = {}
 
       if cached_value.dig('metadata', 'ttl')
@@ -69,12 +72,4 @@ class LRUCache
     private
 
     attr_reader :cache, :read_func
-
-    def deep_stringify_keys(hash)
-      hash.each_with_object({}) do |(key, value), result|
-        new_key = key.to_s
-        new_value = value.is_a?(Hash) ? deep_stringify_keys(value) : value
-        result[new_key] = new_value
-      end
-    end
 end
