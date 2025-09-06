@@ -119,7 +119,7 @@ CRUD_JT.update("HBmKFXoXgJ46mCqer1WXyQ", { user_id: 42, role: 8 })
 
 ```ruby
 # supports for ttl and/or silence_read
-CRUD_JT.update("HBmKFXoXgJ46mCqer1WXyQ", { user_id: 42, role: 6 }, ttl: 41, silence_read: 8)
+CRUD_JT.update("HBmKFXoXgJ46mCqer1WXyQ", { user_id: 42, role: 8 }, ttl: 41, silence_read: 8)
 => true # {"metadata"=>{"ttl"=>41, "silence_read"=>10}, "data"=>{"user_id"=>42, "role"=>8}}
 ```
 
