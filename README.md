@@ -31,6 +31,7 @@ require 'crud_jt'
 # openssl rand -base64 48 # In your terminal
 # => your_encrypted_base64/48
 CRUD_JT::Config.encrypted_key('your_encrypted_base64/32/48/64')
+               .store_jt_path('your_path_to_file_storage') # optional
                .start!
 ```
 
@@ -144,15 +145,15 @@ CRUD_JT.delete("HBmKFXoXgJ46mCqer1WXyQ")
 
 # Performance
 **40k** requests of **256 bytes** — median over 10 runs  
-ARM64 (Apple M1+), macOS 13.5  
-Ruby 3.2.2 / Rust 1.80.0
+ARM64 (Apple M1+), macOS 15.5/15.6  
+Ruby 3.4.4
 
-| Function | CRUD JT (Ruby) | JWT (Ruby) | redis-session-store (Rust) |
+| Function | CRUD JT (Ruby) | JWT (Ruby) | redis-session-store (Ruby) |
 |----------|-------|------|------|
-| C        | `0.3 second` ⭐ | 1.108 seconds | 1.048 seconds |
-| R        | `0.05 second` ⭐ | 2.473 seconds | `0.05 second` ⭐ |
-| U        | 0.3 second | X | `0.05 second` ⭐ |
-| D        | 0.2 second | X | `0.05 second` ⭐ |
+| C        | `0.344 second` ![Logo Favicon Light](logos/crud_jt_logo_favicon_white.png#gh-light-mode-only) ![Logo Favicon Dark](logos/crud_jt_logo_favicon_black.png#gh-dark-mode-only) | 0.641 second | 4.057 seconds |
+| R        | `0.181 second` ![Logo Favicon Light](logos/crud_jt_logo_favicon_white.png#gh-light-mode-only) ![Logo Favicon Dark](logos/crud_jt_logo_favicon_black.png#gh-dark-mode-only) | 1.019 second | 7.011 seconds |
+| U        | `0.591 second` ![Logo Favicon Light](logos/crud_jt_logo_favicon_white.png#gh-light-mode-only) ![Logo Favicon Dark](logos/crud_jt_logo_favicon_black.png#gh-dark-mode-only) | X | 3.49 seconds |
+| D        | `0.282 second` ![Logo Favicon Light](logos/crud_jt_logo_favicon_white.png#gh-light-mode-only) ![Logo Favicon Dark](logos/crud_jt_logo_favicon_black.png#gh-dark-mode-only) | X | 6.589 seconds |
 
 [Full results](https://github.com/exwarvlad/benchmarks)
 
