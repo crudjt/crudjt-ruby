@@ -1,6 +1,6 @@
 <p align="center">
-  <img src="logos/crud_jt_logo_black.png#gh-light-mode-only" alt="Logo Light" />
-  <img src="logos/crud_jt_logo.png#gh-dark-mode-only" alt="Logo Dark" />
+  <img src="https://raw.githubusercontent.com/Cm7B68NWsMNNYjzMDREacmpe5sI1o0g40ZC9w1y/crud_jt-ruby/master/logos/crud_jt_logo_black.png?token=GHSAT0AAAAAADH4V5GSAEBKNFO2XAJMA4FK2HRDXVQ#gh-light-mode-only" alt="Logo Light" />
+  <img src="https://raw.githubusercontent.com/Cm7B68NWsMNNYjzMDREacmpe5sI1o0g40ZC9w1y/crud_jt-ruby/master/logos/crud_jt_logo.png?token=GHSAT0AAAAAADH4V5GT5QKEVOSYZJ6DML3W2HRDYTA#gh-dark-mode-only" alt="Logo Dark" />
 </p>
 
 <p align="center">
@@ -148,7 +148,7 @@ CRUD_JT.delete("HBmKFXoXgJ46mCqer1WXyQ")
 ARM64 (Apple M1+), macOS 15.5/15.6  
 Ruby 3.4.4
 
-| Function | CRUD JT (Ruby) | JWT (Ruby) | redis-session-store (Ruby) |
+| Function | CRUD JT (Ruby) | JWT (Ruby) | redis-session-store (Ruby, Rails 8.0.4) |
 |----------|-------|------|------|
 | C        | `0.344 second` ![Logo Favicon Light](logos/crud_jt_logo_favicon_white.png#gh-light-mode-only) ![Logo Favicon Dark](logos/crud_jt_logo_favicon_black.png#gh-dark-mode-only) | 0.641 second | 4.057 seconds |
 | R        | `0.181 second` ![Logo Favicon Light](logos/crud_jt_logo_favicon_white.png#gh-light-mode-only) ![Logo Favicon Dark](logos/crud_jt_logo_favicon_black.png#gh-dark-mode-only) | 1.019 second | 7.011 seconds |

@@ -6,9 +6,7 @@ require_relative 'lru_cache'
 require_relative 'validation'
 require_relative 'errors'
 
-include Validation
-
-# require_relative 'methods/load_store_jt_library'
+include CRUD_JT::Validation
 
 def load_store_jt_library
   os = case RbConfig::CONFIG['host_os']
@@ -59,7 +57,7 @@ module CRUD_JT
       end
 
       def encrypted_key(value)
-        Validation.validate_encrypted_key!(value)
+        CRUD_JT::Validation.validate_encrypted_key!(value)
 
         @settings[:encrypted_key] = value
         self
@@ -75,11 +73,11 @@ module CRUD_JT
       end
 
       def start!
-        raise Validation.error_message(Validation::ERROR_ENCRYPTED_KEY_NOT_SET) unless @settings[:encrypted_key]
-        raise Validation.error_message(Validation::ERROR_ALREADY_STARTED) if was_started
+        raise CRUD_JT::Validation.error_message(CRUD_JT::Validation::ERROR_ENCRYPTED_KEY_NOT_SET) unless @settings[:encrypted_key]
+        raise CRUD_JT::Validation.error_message(CRUD_JT::Validation::ERROR_ALREADY_STARTED) if was_started
 
         result = JSON(start_store_jt(@settings[:encrypted_key], @settings[:store_jt_path]))
-        raise ERRORS[result['code']], result['error_message'] unless result['ok']
+        raise CRUD_JT::ERRORS[result['code']], result['error_message'] unless result['ok']
 
         @was_started = true
       end
@@ -91,25 +89,25 @@ module CRUD_JT
   attach_function :__update, [:string, :pointer, :size_t, :int, :int], :bool
   attach_function :__delete, [:string], :bool
 
-  @lru_cache = LRUCache.new(lambda { |token| __read(token) })
+  @lru_cache = CRUD_JT::LRUCache.new(lambda { |token| __read(token) })
 
   def self.create(hash, ttl: nil, silence_read: nil)
-    raise Validation.error_message(Validation::ERROR_NOT_STARTED) unless CRUD_JT::Config.was_started
-    Validation.validate_insertion!(hash, ttl, silence_read)
+    raise CRUD_JT::Validation.error_message(CRUD_JT::Validation::ERROR_NOT_STARTED) unless CRUD_JT::Config.was_started
+    CRUD_JT::Validation.validate_insertion!(hash, ttl, silence_read)
 
     ttl ||= -1
     silence_read ||= -1
 
     packed_data = MessagePack.pack(hash)
     hash_bytesize = packed_data.bytesize
-    Validation.validate_hash_bytesize!(hash_bytesize)
+    CRUD_JT::Validation.validate_hash_bytesize!(hash_bytesize)
 
     # Creation buffer with packed data
     buffer = FFI::MemoryPointer.new(:char, hash_bytesize)
     buffer.put_bytes(0, packed_data)
 
     token = __create(buffer, hash_bytesize, ttl, silence_read)
-    raise CRUD_JT::Errors::InternalError, 'Something went wrong. Ups' unless token
+    raise CRUD_JT::CRUD_JT::ERRORS::InternalError, 'Something went wrong. Ups' unless token
 
     @lru_cache.insert(token, packed_data, ttl, silence_read)
 
@@ -117,8 +115,8 @@ module CRUD_JT
   end
 
   def self.read(token)
-    raise Validation.error_message(Validation::ERROR_NOT_STARTED) unless CRUD_JT::Config.was_started
-    Validation.validate_token!(token)
+    raise CRUD_JT::Validation.error_message(CRUD_JT::Validation::ERROR_NOT_STARTED) unless CRUD_JT::Config.was_started
+    CRUD_JT::Validation.validate_token!(token)
 
     output = @lru_cache.get(token)
     return output if output
@@ -127,7 +125,7 @@ module CRUD_JT
     return if str.nil?
 
   	result = JSON.parse(str)
-    raise ERRORS[result['code']] unless result['ok']
+    raise CRUD_JT::ERRORS[result['code']] unless result['ok']
     return if result['data'].nil?
 
     data = JSON(result['data'])
@@ -136,13 +134,13 @@ module CRUD_JT
   end
 
   def self.update(token, hash, ttl: nil, silence_read: nil)
-    raise Validation.error_message(Validation::ERROR_NOT_STARTED) unless CRUD_JT::Config.was_started
-    Validation.validate_token!(token)
-    Validation.validate_insertion!(hash, ttl, silence_read)
+    raise CRUD_JT::Validation.error_message(CRUD_JT::Validation::ERROR_NOT_STARTED) unless CRUD_JT::Config.was_started
+    CRUD_JT::Validation.validate_token!(token)
+    CRUD_JT::Validation.validate_insertion!(hash, ttl, silence_read)
 
     packed_data = MessagePack.pack(hash)
     hash_bytesize = packed_data.bytesize
-    Validation.validate_hash_bytesize!(hash_bytesize)
+    CRUD_JT::Validation.validate_hash_bytesize!(hash_bytesize)
 
     ttl ||= -1
     silence_read ||= -1
@@ -160,8 +158,8 @@ module CRUD_JT
   end
 
   def self.delete(token)
-    raise Validation.error_message(Validation::ERROR_NOT_STARTED) unless CRUD_JT::Config.was_started
-    Validation.validate_token!(token)
+    raise CRUD_JT::Validation.error_message(CRUD_JT::Validation::ERROR_NOT_STARTED) unless CRUD_JT::Config.was_started
+    CRUD_JT::Validation.validate_token!(token)
 
     @lru_cache.delete(token)
     __delete(token)

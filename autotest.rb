@@ -1,5 +1,4 @@
 require 'benchmark'
-# require_relative 'embed.rb'
 require 'crud_jt'
 
 p "OS: #{RbConfig::CONFIG['host_os']}"
@@ -10,7 +9,7 @@ p 'Checking encrypted key validations...'
 begin
   CRUD_JT::Config.start!
 rescue RuntimeError => error
-  p error.message == Validation.error_message(Validation::ERROR_ENCRYPTED_KEY_NOT_SET)
+  p error.message == CRUD_JT::Validation.error_message(CRUD_JT::Validation::ERROR_ENCRYPTED_KEY_NOT_SET)
 else
   p false
 end
@@ -34,14 +33,14 @@ else
   p false
 end
 
-# validations
+# CRUD_JT::Validations
 p 'Checking base validations...'
 
 # when not started store_jt
 begin
   CRUD_JT.create({ some_key: 'some value' })
 rescue RuntimeError => error
-  p error.message == Validation.error_message(Validation::ERROR_NOT_STARTED)
+  p error.message == CRUD_JT::Validation.error_message(CRUD_JT::Validation::ERROR_NOT_STARTED)
 else
   p false
 end
@@ -61,7 +60,7 @@ end
     begin
       CRUD_JT.create({ some_key: 'some value' })
     rescue RuntimeError => error
-      p error.message == Validation.error_message(Validation::ERROR_NOT_STARTED)
+      p error.message == CRUD_JT::Validation.error_message(CRUD_JT::Validation::ERROR_NOT_STARTED)
     else
       p false unless RbConfig::CONFIG['host_os'].include?('w32')
     end
@@ -85,16 +84,16 @@ end
 
 # hash can not be bigger than maximum size
 begin
-  hash_with_unlim_size = { some_key: 'q' * Validation::MAX_HASH_SIZE }
+  hash_with_unlim_size = { some_key: 'q' * CRUD_JT::Validation::MAX_HASH_SIZE }
   hash_bytesize = MessagePack.pack(hash_with_unlim_size).bytesize
 
-  while MessagePack.pack(hash_with_unlim_size).bytesize > Validation::MAX_HASH_SIZE + 1
+  while MessagePack.pack(hash_with_unlim_size).bytesize > CRUD_JT::Validation::MAX_HASH_SIZE + 1
     hash_with_unlim_size[:some_key].chop!
   end
 
   CRUD_JT.create(hash_with_unlim_size)
 rescue RuntimeError => error
-  p error.message == "Hash can not be bigger than #{Validation::MAX_HASH_SIZE} bytesize"
+  p error.message == "Hash can not be bigger than #{CRUD_JT::Validation::MAX_HASH_SIZE} bytesize"
 else
   p false
 end
@@ -104,7 +103,7 @@ end
 begin
   CRUD_JT::Config.start!
 rescue RuntimeError => error
-  p error.message == Validation.error_message(Validation::ERROR_ALREADY_STARTED)
+  p error.message == CRUD_JT::Validation.error_message(CRUD_JT::Validation::ERROR_ALREADY_STARTED)
 else
   p false
 end
@@ -199,7 +198,7 @@ p CRUD_JT.read(token_with_ttl_and_silence_read) == nil
 REQUESTS = 40_000
 
 data = {user_id: 414243, role: 11, devices: {ios_expired_at: Time.now.to_s, android_expired_at: Time.now.to_s, external_api_integration_expired_at: Time.now.to_s}, a: "a" * 100 }
-while MessagePack.pack(data).bytesize > Validation::MAX_HASH_SIZE
+while MessagePack.pack(data).bytesize > CRUD_JT::Validation::MAX_HASH_SIZE
   data[:a].chop!
 end
 
