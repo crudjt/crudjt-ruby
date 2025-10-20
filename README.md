@@ -1,6 +1,6 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Cm7B68NWsMNNYjzMDREacmpe5sI1o0g40ZC9w1y/crud_jt-ruby/master/logos/crud_jt_logo_black.png?token=GHSAT0AAAAAADH4V5GSAEBKNFO2XAJMA4FK2HRDXVQ#gh-light-mode-only" alt="Logo Light" />
-  <img src="https://raw.githubusercontent.com/Cm7B68NWsMNNYjzMDREacmpe5sI1o0g40ZC9w1y/crud_jt-ruby/master/logos/crud_jt_logo.png?token=GHSAT0AAAAAADH4V5GT5QKEVOSYZJ6DML3W2HRDYTA#gh-dark-mode-only" alt="Logo Dark" />
+  <img src="logos/crud_jt_logo_black.png#gh-light-mode-only" alt="Logo Light" />
+  <img src="logos/crud_jt_logo.png#gh-dark-mode-only" alt="Logo Dark" />
 </p>
 
 <p align="center">
@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/sponsors/exwarvlad">
+  <a href="https://www.patreon.com/exwarvlad">
     <img src="logos/buy_me_a_coffee_orange.svg" alt="Buy Me a Coffee"/>
   </a>
 </p>
@@ -211,17 +211,18 @@ The library has the following limits and requirements
 - **`encrypted_key` size:** must be 32, 48, or 64 bytes
 
 # Contact & Support
-![Logo Favicon Light](logos/crud_jt_logo_favicon_white.png#gh-light-mode-only)
-![Logo Favicon Dark](logos/crud_jt_logo_favicon_black.png#gh-dark-mode-only)
-Egineered by [EXWARVLAD](https://github.com/exwarvlad)
+<p align="center">
+  <img src="logos/crud_jt_logo_favicon_white.png#gh-light-mode-only" alt="Visit Light" width="100" />
+  <img src="logos/crid_jt_logo_favicon_white_160.png#gh-dark-mode-only" alt="Visit Dark" />
+</p>
 
-- **Custom integrations / new features / collaboration**: exwarvlad@gmail.com  
-- **Library support & bug reports:** [open an issue](https://github.com/exwarvlad/crud_jt-ruby/issues)
+- **Custom integrations / new features / collaboration**: support@crudjt.com  
+- **Library support & bug reports:** [open an issue](https://github.com/crud_jt/crud_jt-ruby/issues)
 
 
 # Lincense
 CRUD JT is released under the [MIT License](https://opensource.org/licenses/MIT)
 
 <p align="center">
-  💘 Shoot your g . ? Love me out via <a href="https://github.com/sponsors/exwarvlad">Github Sponsors</a>!
+  💘 Shoot your g . ? Love me out via <a href="https://www.patreon.com/exwarvlad">Github Sponsors</a>!
 </p>
