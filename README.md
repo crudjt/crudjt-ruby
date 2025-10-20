@@ -212,8 +212,8 @@ The library has the following limits and requirements
 
 # Contact & Support
 <p align="center">
-  <img src="logos/crud_jt_logo_favicon_white.png#gh-light-mode-only" alt="Visit Light" width="100" />
-  <img src="logos/crid_jt_logo_favicon_white_160.png#gh-dark-mode-only" alt="Visit Dark" />
+  <img src="logos/crud_jt_logo_favicon_black_160.png#gh-light-mode-only" alt="Visit Light" />
+  <img src="logos/crud_jt_logo_favicon_white_160.png#gh-dark-mode-only" alt="Visit Dark" />
 </p>
 
 - **Custom integrations / new features / collaboration**: support@crudjt.com  
