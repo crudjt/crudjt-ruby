@@ -66,7 +66,7 @@ jobs:
 
     - name: Install gem
       run: |
-        gem install pkg/crud_jt-0.1.0.gem
+        gem install pkg/crud_jt-1.0.0.beta.0.gem
 
     - name: Run tests
       run: |

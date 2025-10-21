@@ -1,6 +1,5 @@
 <p align="center">
-  <img src="logos/crud_jt_logo_black.png#gh-light-mode-only" alt="Logo Light" />
-  <img src="logos/crud_jt_logo.png#gh-dark-mode-only" alt="Logo Dark" />
+  <img src="logos/crud_jt_logo_black.png" alt="Logo Light" />
 </p>
 
 <p align="center">
@@ -119,7 +118,7 @@ CRUD_JT.update("HBmKFXoXgJ46mCqer1WXyQ", { user_id: 42, role: 8 })
 ```
 
 ```ruby
-# supports for :ttl and/or :silence_read
+# supports for ttl and/or silence_read
 CRUD_JT.update("HBmKFXoXgJ46mCqer1WXyQ", { user_id: 42, role: 8 }, ttl: 41, silence_read: 8)
 => true # {"metadata"=>{"ttl"=>41, "silence_read"=>10}, "data"=>{"user_id"=>42, "role"=>8}}
 ```
@@ -150,10 +149,10 @@ Ruby 3.4.4
 
 | Function | CRUD JT (Ruby) | JWT (Ruby) | redis-session-store (Ruby, Rails 8.0.4) |
 |----------|-------|------|------|
-| C        | `0.344 second` ![Logo Favicon Light](logos/crud_jt_logo_favicon_white.png#gh-light-mode-only) ![Logo Favicon Dark](logos/crud_jt_logo_favicon_black.png#gh-dark-mode-only) | 0.641 second | 4.057 seconds |
-| R        | `0.181 second` ![Logo Favicon Light](logos/crud_jt_logo_favicon_white.png#gh-light-mode-only) ![Logo Favicon Dark](logos/crud_jt_logo_favicon_black.png#gh-dark-mode-only) | 1.019 second | 7.011 seconds |
-| U        | `0.591 second` ![Logo Favicon Light](logos/crud_jt_logo_favicon_white.png#gh-light-mode-only) ![Logo Favicon Dark](logos/crud_jt_logo_favicon_black.png#gh-dark-mode-only) | X | 3.49 seconds |
-| D        | `0.282 second` ![Logo Favicon Light](logos/crud_jt_logo_favicon_white.png#gh-light-mode-only) ![Logo Favicon Dark](logos/crud_jt_logo_favicon_black.png#gh-dark-mode-only) | X | 6.589 seconds |
+| C        | `0.344 second` ![Logo Favicon Dark](logos/crud_jt_logo_favicon_white.png) | 0.641 second | 4.057 seconds |
+| R        | `0.181 second` ![Logo Favicon Dark](logos/crud_jt_logo_favicon_white.png) | 1.019 second | 7.011 seconds |
+| U        | `0.591 second` ![Logo Favicon Dark](logos/crud_jt_logo_favicon_white.png) | X | 3.49 seconds |
+| D        | `0.282 second` ![Logo Favicon Dark](logos/crud_jt_logo_favicon_white.png) | X | 6.589 seconds |
 
 [Full results](https://github.com/exwarvlad/benchmarks)
 
@@ -182,13 +181,13 @@ You can configure the library before starting it
 require "crud_jt"
 
 # Required configuration
-CRUD_JT::Config.encrypted_key("some_base64_key")
+CRUD_JT.encrypted_key("some_base64_key")
 
 # Optional configuration
-CRUD_JT::Config.store_jt_path("/custom/path/to/store_jt")
+CRUD_JT.store_jt_path("/custom/path/to/store_jt")
 
 # Start the CRUD JT and Store JT
-CRUD_JT::Config.start!
+CRUD_JT.start!
 ```
 
 
@@ -212,8 +211,7 @@ The library has the following limits and requirements
 
 # Contact & Support
 <p align="center">
-  <img src="logos/crud_jt_logo_favicon_black_160.png#gh-light-mode-only" alt="Visit Light" />
-  <img src="logos/crud_jt_logo_favicon_white_160.png#gh-dark-mode-only" alt="Visit Dark" />
+  <img src="logos/crud_jt_logo_favicon_black_160.png" alt="Business Card" />
 </p>
 
 - **Custom integrations / new features / collaboration**: support@crudjt.com  
