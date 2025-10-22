@@ -221,7 +221,7 @@ The library has the following limits and requirements
 
 
 # Lincense
-CRUD JT is released under the [MIT License](https://opensource.org/licenses/MIT)
+CRUD JT is released under the [MIT License](LICENSE.txt)
 
 <p align="center">
   💘 Shoot your g . ? Love me out via <a href="https://www.patreon.com/exwarvlad">Github Sponsors</a>!
