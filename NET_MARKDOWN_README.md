@@ -15,17 +15,17 @@
 # Installation
 
 ```sh
-bundle add crud_jt
+bundle add crudjt
 ```
 Or install directly  
 ```sh
-gem install crud_jt
+gem install crudjt
 ```
 
 Require CRUD JT in your project
 
 ```ruby
-require 'crud_jt'
+require 'crudjt'
 
 # openssl rand -base64 48 # In your terminal
 # => your_encrypted_base64/48
@@ -178,7 +178,7 @@ Stored tokens are placed in the **file system** according to the following order
 You can configure the library before starting it
 
 ```ruby
-require "crud_jt"
+require "crudjt"
 
 # Required configuration
 CRUD_JT.encrypted_key("some_base64_key")
@@ -215,7 +215,7 @@ The library has the following limits and requirements
 </p>
 
 - **Custom integrations / new features / collaboration**: support@crudjt.com  
-- **Library support & bug reports:** [open an issue](https://github.com/crud_jt/crud_jt-ruby/issues)
+- **Library support & bug reports:** [open an issue](https://github.com/crudjt/crudjt-ruby/issues)
 
 
 # Lincense

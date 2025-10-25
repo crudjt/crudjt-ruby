@@ -1,5 +1,5 @@
 require 'benchmark'
-require 'crud_jt'
+require 'crudjt'
 
 p "OS: #{RbConfig::CONFIG['host_os']}"
 p "CPU: #{RbConfig::CONFIG['host_cpu']}"

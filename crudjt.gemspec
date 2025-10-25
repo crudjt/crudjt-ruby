@@ -1,7 +1,7 @@
-require_relative 'lib/crud_jt/version'
+require_relative 'lib/crudjt/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "crud_jt"
+  spec.name          = "crudjt"
   spec.version       = CrudJt::VERSION
   spec.authors       = ["v_akymov"]
   spec.email         = ["support@crudjt.com"]
