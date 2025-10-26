@@ -49,15 +49,7 @@ CRUD_JT.create({ user_id: 42, role: 11 }, ttl: 3600 * 24 * 30)
 ```
 
 ```ruby
-# with :silence_read — silently read the token a specified number of times, then delete it permanently
-CRUD_JT.create({ user_id: 42, role: 11 }, silence_read: 3)
-=> "HBmKFXoXgJ46mCqer1WXyQ"
-```
-
-```ruby
-# with :ttl and :silence_read
-CRUD_JT.create({ user_id: 42, role: 11 }, ttl: 3600 * 24 * 30, silence_read: 3)
-=> "HBmKFXoXgJ46mCqer1WXyQ"
+☕ = 🐰🥚
 ```
 
 # R
@@ -87,28 +79,7 @@ CRUD_JT.read("HBmKFXoXgJ46mCqer1WXyQ")
 ```
 
 ```ruby
-# with :silence_read
-CRUD_JT.read("HBmKFXoXgJ46mCqer1WXyQ")
-=> {"metadata"=>{"silence_read"=>2}, "data"=>{"user_id"=>42, "role"=>11}}
-
-# after 1 read
-CRUD_JT.read("HBmKFXoXgJ46mCqer1WXyQ")
-=> {"metadata"=>{"silence_read"=>1}, "data"=>{"user_id"=>42, "role"=>11}}
-
-# still one read
-CRUD_JT.read("HBmKFXoXgJ46mCqer1WXyQ")
-=> {"metadata"=>{"silence_read"=>0}, "data"=>{"user_id"=>42, "role"=>11}}
-
-# ups
-CRUD_JT.read("HBmKFXoXgJ46mCqer1WXyQ")
-=> nil
-```
-
-```ruby
-# with :ttl and :silence_read
-CRUD_JT.read("HBmKFXoXgJ46mCqer1WXyQ")
-=> {"metadata"=>{"ttl"=>88 "silence_read"=>2}, "data"=>{"user_id"=>42, "role"=>11}}
-# ...
+# with 🐰🥚
 ```
 
 # U
@@ -119,9 +90,13 @@ CRUD_JT.update("HBmKFXoXgJ46mCqer1WXyQ", { user_id: 42, role: 8 })
 ```
 
 ```ruby
-# supports for :ttl and/or :silence_read
-CRUD_JT.update("HBmKFXoXgJ46mCqer1WXyQ", { user_id: 42, role: 8 }, ttl: 41, silence_read: 8)
-=> true # {"metadata"=>{"ttl"=>41, "silence_read"=>10}, "data"=>{"user_id"=>42, "role"=>8}}
+# supported ttl update
+CRUD_JT.update("HBmKFXoXgJ46mCqer1WXyQ", { user_id: ttl: 42, role: 8 }, 42)
+=> true # {"metadata"=>{"ttl"=>42}, "data"=>{"user_id"=>42, "role"=>8}}
+```
+
+```ruby
+# supported 🐰🥚 update
 ```
 
 ```ruby
