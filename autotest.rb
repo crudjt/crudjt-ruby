@@ -68,6 +68,7 @@ end
 begin
   CRUD_JT::Config.encrypted_key('Cm7B68NWsMNNYjzMDREacmpe5sI1o0g40ZC9w1yQW3WOes7Gm59UsittLOHR2dciYiwmaYq98l3tG8h9yXVCxg==')
                  .store_jt_path(nil)
+                 .cheatcode(CRUD_JT::Config::CHEATCODE)
                  .start!
 rescue => e
   p e.message unless RbConfig::CONFIG['host_os'].include?('w32')
