@@ -91,7 +91,7 @@ CRUD_JT.update("HBmKFXoXgJ46mCqer1WXyQ", { user_id: 42, role: 8 })
 
 ```ruby
 # supported ttl update
-CRUD_JT.update("HBmKFXoXgJ46mCqer1WXyQ", { user_id: ttl: 42, role: 8 }, 42)
+CRUD_JT.update("HBmKFXoXgJ46mCqer1WXyQ", { user_id: 42, role: 8 }, ttl: 42)
 => true # {"metadata"=>{"ttl"=>42}, "data"=>{"user_id"=>42, "role"=>8}}
 ```
 
