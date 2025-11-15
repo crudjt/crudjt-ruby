@@ -15,6 +15,14 @@
 
 # Installation
 
+### For betatesters
+```sh
+git clone git@github.com:Cm7B68NWsMNNYjzMDREacmpe5sI1o0g40ZC9w1y/crudjt-ruby.git
+gem install crudjt-ruby/pkg/crudjt-1.0.0.beta.0.gem
+```
+
+### After Release for users
+
 ```sh
 bundle add crudjt
 ```
