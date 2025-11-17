@@ -4,14 +4,15 @@
 </p>
 
 <p align="center">
-  Simplifies user session. Login/Logout/Authorization
-</p>
-
-<p align="center">
   <a href="https://www.patreon.com/crudjt">
     <img src="logos/buy_me_a_coffee_orange.svg" alt="Buy Me a Coffee"/>
   </a>
 </p>
+
+### File-based tokens for RESTful APIs
+
+### Why `CRUDJT`?
+[Escape the JWT trap: predictable login, safe logout](https://medium.com/@CoffeeMainer/jwt-trap-login-logout-under-control-7f4495d6024d)
 
 # Installation
 
