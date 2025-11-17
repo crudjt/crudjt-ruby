@@ -128,7 +128,7 @@ CRUD_JT.delete("HBmKFXoXgJ46mCqer1WXyQ")
 ```
 
 # Performance
-**40k** requests of **256 bytes** — median over 10 runs  
+**40k** requests of **256 bytes** each — median over 10 runs  
 ARM64 (Apple M1+), macOS 15.5/15.6  
 Ruby 3.4.4
 
@@ -139,9 +139,17 @@ Ruby 3.4.4
 | U        | `0.46 second` ![Logo Favicon Light](logos/crud_jt_logo_favicon_white.png#gh-light-mode-only) ![Logo Favicon Dark](logos/crud_jt_logo_favicon_black.png#gh-dark-mode-only) | X | 3.49 seconds |
 | D        | `0.194 second` ![Logo Favicon Light](logos/crud_jt_logo_favicon_white.png#gh-light-mode-only) ![Logo Favicon Dark](logos/crud_jt_logo_favicon_black.png#gh-dark-mode-only) | X | 6.589 seconds |
 
-[Full results](https://github.com/exwarvlad/benchmarks)
+[Full benchmark results](https://github.com/exwarvlad/benchmarks)
 
-# Storage (Store JT)
+# Storage (File-based)  
+
+## Disk footprint  
+**40k** tokens of **256 bytes** each — median over 10 creates  
+darwin23, APFS  
+
+`48 MB`  
+
+[Full disk footprint results](https://github.com/Cm7B68NWsMNNYjzMDREacmpe5sI1o0g40ZC9w1y/disk_footprint)  
 
 ## Path Lookup Order
 Stored tokens are placed in the **file system** according to the following order
@@ -153,12 +161,12 @@ Stored tokens are placed in the **file system** according to the following order
    - **Windows**: `C:\Program Files\store_jt`
 3. Project root directory (fallback)
 
-## Storage Characteristics
-* Store JT **automatically removing expired tokens** every 24 hours without blocking the main thread   
-* **Store JT automatically fsyncs every 500ms**, meanwhile tokens ​​are available from cache
-* Store JT is available for one process to open per instance for the time being
+## Characteristics
+* CRUDJT **automatically removing expired tokens** every **24 hours** without blocking the main thread   
+* **CRUDJT automatically fsyncs every 500ms**, meanwhile tokens ​​are available from cache
+* CRUDJT is available for one process to open per instance for the time being
 
-## Configuration
+# Configuration
 
 You can configure the library before starting it
 
@@ -180,10 +188,10 @@ CRUD_JT::Config.start!
 Sets the encrypted key (**required**)
 
 #### `store_jt_path(path_to_db)`
-Overrides the default Store JT path (**optional**)
+Overrides the default file storage path (**optional**)
 
 #### `start!`
-Initializes the CRUD JT and opens the Store JT (**must be called last**)
+Initializes the CRUDJT instance (**must be called last**)
 
 # Limits
 The library has the following limits and requirements
@@ -202,7 +210,6 @@ The library has the following limits and requirements
 
 - **Custom integrations / new features / collaboration**: support@crudjt.com  
 - **Library support & bug reports:** [open an issue](https://github.com/crudjt/crudjt-ruby/issues)
-
 
 # Lincense
 CRUD JT is released under the [MIT License](LICENSE.txt)
