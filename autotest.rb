@@ -67,7 +67,7 @@ end
 
 begin
   CRUD_JT::Config.encrypted_key('Cm7B68NWsMNNYjzMDREacmpe5sI1o0g40ZC9w1yQW3WOes7Gm59UsittLOHR2dciYiwmaYq98l3tG8h9yXVCxg==')
-                 .store_jt_path(nil)
+                 .store_jt_path('/var/lib/store_jt')
                  .cheatcode(CRUD_JT::Config::CHEATCODE)
                  .start!
 rescue => e
