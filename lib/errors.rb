@@ -1,7 +1,7 @@
-require_relative 'errors/donate_exception'
+require_relative 'errors/invalid_state'
 require_relative 'errors/internal_error'
 
 CRUD_JT::ERRORS = {
-  'DE000' => CRUD_JT::Errors::DonateException,
+  '55JT01' => CRUD_JT::Errors::InvalidState,
   'XX000' => CRUD_JT::Errors::InternalError
 }

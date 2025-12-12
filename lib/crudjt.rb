@@ -1,10 +1,13 @@
 require 'ffi'
 require 'json'
 require 'msgpack'
+require "grpc"
 
 require_relative 'lru_cache'
 require_relative 'validation'
 require_relative 'errors'
+require_relative 'generated/token_service_services_pb'
+require_relative 'token_service_impl'
 
 include CRUD_JT::Validation
 
@@ -48,6 +51,8 @@ module CRUD_JT
     load_store_jt_library
 
     CHEATCODE = 'BAGUVIX' # 🐰🥚
+    GRPC_HOST = '127.0.0.1'
+    GRPC_PORT = 50051
 
     attach_function :start_store_jt, [:string, :string], :string
 
@@ -65,14 +70,8 @@ module CRUD_JT
         self
       end
 
-      def store_jt_path(value)
-        @settings[:store_jt_path] = value
-        self
-      end
-
-      def cheatcode(code)
-        @settings[:cheatcode] = code
-        self
+      def master?
+        @settings[:master]
       end
 
       def hint_cheactcode
@@ -83,9 +82,22 @@ module CRUD_JT
         @was_started
       end
 
-      def start!
-        raise CRUD_JT::Validation.error_message(CRUD_JT::Validation::ERROR_ENCRYPTED_KEY_NOT_SET) unless @settings[:encrypted_key]
+      def stub
+        @stub
+      end
+
+      def start_master(options = {})
         raise CRUD_JT::Validation.error_message(CRUD_JT::Validation::ERROR_ALREADY_STARTED) if was_started
+        raise CRUD_JT::Validation.error_message(CRUD_JT::Validation::ERROR_ENCRYPTED_KEY_NOT_SET) unless options[:encrypted_key]
+
+        CRUD_JT::Validation.validate_encrypted_key!(options[:encrypted_key])
+
+        @settings[:encrypted_key] = options[:encrypted_key]
+        @settings[:store_jt_path] = options[:store_jt_path]
+        @settings[:grpc_host] = options[:grpc_host] || GRPC_HOST
+        @settings[:grpc_port] = options[:grpc_port] || GRPC_PORT
+
+        @settings[:cheatcode] = options[:cheatcode]
 
         result = JSON(start_store_jt(@settings[:encrypted_key], @settings[:store_jt_path]))
         raise CRUD_JT::ERRORS[result['code']], result['error_message'] unless result['ok']
@@ -94,6 +106,43 @@ module CRUD_JT
           STDOUT.puts("🐰🥚 You have activated optional param :silence_read for CRUD_JT on method create \nIdeal for one-time reads, email confirmation links, or limits on the number of operations \nEach read decrements :silence_read by 1, when the counter reaches zero — the token is deleted permanently")
         end
 
+        port = "#{@settings[:grpc_host]}:#{@settings[:grpc_port]}"
+        grpc_server = TokenServiceImpl.call(port)
+
+        at_exit do
+          grpc_server.stop
+          STDOUT.puts "Shutting down gRPC server on port: #{port}"
+          exit(0)
+        end
+
+        Thread.new do
+          STDOUT.puts "gRPC Leader running on port: #{port}"
+          grpc_server.run_till_terminated
+        end
+
+        @settings[:master] = true
+        @was_started = true
+      end
+
+      def connect_to_master(options = {})
+        raise CRUD_JT::Validation.error_message(CRUD_JT::Validation::ERROR_ALREADY_STARTED) if was_started
+
+        @settings[:grpc_host] = options[:grpc_host] || GRPC_HOST
+        @settings[:grpc_port] = options[:grpc_port] || GRPC_PORT
+        port = "#{@settings[:grpc_host]}:#{@settings[:grpc_port]}"
+
+        @_channel = GRPC::Core::Channel.new(
+          port,
+          nil,
+          :this_channel_is_insecure
+        )
+
+        @stub = Token::TokenService::Stub.new(
+          port,
+          :this_channel_is_insecure
+        )
+
+        @settings[:master] = false
         @was_started = true
       end
     end
@@ -106,7 +155,7 @@ module CRUD_JT
 
   @lru_cache = CRUD_JT::LRUCache.new(lambda { |token| __read(token) })
 
-  def self.create(hash, ttl: nil, silence_read: nil)
+  def self.original_create(hash, ttl: nil, silence_read: nil)
     raise CRUD_JT::Validation.error_message(CRUD_JT::Validation::ERROR_NOT_STARTED) unless CRUD_JT::Config.was_started
     CRUD_JT::Validation.validate_insertion!(hash, ttl, silence_read)
 
@@ -130,7 +179,20 @@ module CRUD_JT
     token
   end
 
-  def self.read(token)
+  def self.create(data, ttl: nil, silence_read: nil)
+    if CRUD_JT::Config.master?
+      CRUD_JT.original_create(data, ttl: ttl, silence_read: silence_read)
+    else
+      # token_service.proto expect int64/32 values
+      # it sensative for nil and covert it to 0
+      ttl ||= -1
+      silence_read ||= -1
+
+      CRUD_JT::Config.stub.create_token(Token::CreateTokenRequest.new(packed_data: MessagePack.pack(data), ttl: ttl, silence_read: silence_read)).token
+    end
+  end
+
+  def self.original_read(token)
     raise CRUD_JT::Validation.error_message(CRUD_JT::Validation::ERROR_NOT_STARTED) unless CRUD_JT::Config.was_started
     CRUD_JT::Validation.validate_token!(token)
 
@@ -149,7 +211,17 @@ module CRUD_JT
     data
   end
 
-  def self.update(token, hash, ttl: nil, silence_read: nil)
+  def self.read(token)
+    if CRUD_JT::Config.master?
+      CRUD_JT.original_read(token)
+    else
+      resp = CRUD_JT::Config.stub.read_token(Token::ReadTokenRequest.new(token: token))
+
+      MessagePack.unpack(resp.packed_data)
+    end
+  end
+
+  def self.original_update(token, hash, ttl: nil, silence_read: nil)
     raise CRUD_JT::Validation.error_message(CRUD_JT::Validation::ERROR_NOT_STARTED) unless CRUD_JT::Config.was_started
     CRUD_JT::Validation.validate_token!(token)
     CRUD_JT::Validation.validate_insertion!(hash, ttl, silence_read)
@@ -174,11 +246,32 @@ module CRUD_JT
     result
   end
 
-  def self.delete(token)
+  def self.update(token, data, ttl: nil, silence_read: nil)
+    if CRUD_JT::Config.master?
+      CRUD_JT.original_update(token, data, ttl: ttl, silence_read: silence_read)
+    else
+      # token_service.proto expect int64/32 values
+      # it sensative for nil and covert it to 0
+      ttl ||= -1
+      silence_read ||= -1
+
+      CRUD_JT::Config.stub.update_token(Token::UpdateTokenRequest.new(token: token, packed_data: MessagePack.pack(data), ttl: ttl, silence_read: silence_read)).result
+    end
+  end
+
+  def self.original_delete(token)
     raise CRUD_JT::Validation.error_message(CRUD_JT::Validation::ERROR_NOT_STARTED) unless CRUD_JT::Config.was_started
     CRUD_JT::Validation.validate_token!(token)
 
     @lru_cache.delete(token)
     __delete(token)
+  end
+
+  def self.delete(token)
+    if CRUD_JT::Config.master?
+      original_delete(token)
+    else
+      CRUD_JT::Config.stub.delete_token(Token::DeleteTokenRequest.new(token: token)).result
+    end
   end
 end

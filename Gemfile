@@ -5,5 +5,6 @@ gemspec
 
 gem 'ffi'
 gem 'msgpack'
-gem 'rake', '~> 12.0'
+gem 'rake'
 gem 'lru_redux'
+gem 'grpc'

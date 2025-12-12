@@ -7,7 +7,7 @@ p "CPU: #{RbConfig::CONFIG['host_cpu']}"
 p 'Checking encrypted key validations...'
 # when started without encrypted key
 begin
-  CRUD_JT::Config.start!
+  CRUD_JT::Config.start_master
 rescue RuntimeError => error
   p error.message == CRUD_JT::Validation.error_message(CRUD_JT::Validation::ERROR_ENCRYPTED_KEY_NOT_SET)
 else
@@ -16,7 +16,7 @@ end
 
 # when started with fake base64 encrypted key
 begin
-  CRUD_JT::Config.encrypted_key('bla-bla-bla').start!
+  CRUD_JT::Config.start_master(encrypted_key: 'bla-bla-bla')
 rescue ArgumentError => error
   p error.message == "'encrypted_key' must be a valid Base64 string"
 else
@@ -26,19 +26,18 @@ end
 # when started with wrong encrypted key lenght
 begin
   key_16_bytes = '2v+XIslTkPTfjva0xeCLHQ=='
-  CRUD_JT::Config.encrypted_key(key_16_bytes).start!
+  CRUD_JT::Config.start_master(encrypted_key: key_16_bytes)
 rescue ArgumentError => error
   p error.message == "'encrypted_key' must be exactly 32, 48, or 64 bytes. Got #{Base64.strict_decode64(key_16_bytes).bytesize} bytes"
 else
   p false
 end
 
-# CRUD_JT::Validations
 p 'Checking base validations...'
 
 # when not started store_jt
 begin
-  CRUD_JT.create({ some_key: 'some value' })
+  CRUD_JT.original_create({ some_key: 'some value' })
 rescue RuntimeError => error
   p error.message == CRUD_JT::Validation.error_message(CRUD_JT::Validation::ERROR_NOT_STARTED)
 else
@@ -47,10 +46,11 @@ end
 
 # when broken store_jt path
 begin
-  CRUD_JT::Config.encrypted_key('Cm7B68NWsMNNYjzMDREacmpe5sI1o0g40ZC9w1yQW3WOes7Gm59UsittLOHR2dciYiwmaYq98l3tG8h9yXVCxg==')
-                 .store_jt_path('/qweqe/qwrqwrrqt')
-                 .start!
-rescue CRUD_JT::Errors::InternalError => error
+  CRUD_JT::Config.start_master(
+    encrypted_key: 'Cm7B68NWsMNNYjzMDREacmpe5sI1o0g40ZC9w1yQW3WOes7Gm59UsittLOHR2dciYiwmaYq98l3tG8h9yXVCxg==',
+    store_jt_path: '/qweqe/qwrqwrrqt'
+  )
+rescue CRUD_JT::Errors::InternalError => _
   # p error.message == 'DB init error: Database opening failed: IO error: Read-only file system (os error 30)'
   p true
 else
@@ -58,7 +58,7 @@ else
 end
     # when not started store_jt
     begin
-      CRUD_JT.create({ some_key: 'some value' })
+      CRUD_JT.original_create({ some_key: 'some value' })
     rescue RuntimeError => error
       p error.message == CRUD_JT::Validation.error_message(CRUD_JT::Validation::ERROR_NOT_STARTED)
     else
@@ -66,13 +66,21 @@ end
     end
 
 begin
-  CRUD_JT::Config.encrypted_key('Cm7B68NWsMNNYjzMDREacmpe5sI1o0g40ZC9w1yQW3WOes7Gm59UsittLOHR2dciYiwmaYq98l3tG8h9yXVCxg==')
-                 .store_jt_path('/var/lib/store_jt')
-                 .cheatcode(CRUD_JT::Config::CHEATCODE)
-                 .start!
+  CRUD_JT::Config.start_master(
+    encrypted_key: 'Cm7B68NWsMNNYjzMDREacmpe5sI1o0g40ZC9w1yQW3WOes7Gm59UsittLOHR2dciYiwmaYq98l3tG8h9yXVCxg==',
+    store_jt_path: '/var/lib/store_jt',
+    cheatcode: CRUD_JT::Config::CHEATCODE
+  )
 rescue => e
   p e.message unless RbConfig::CONFIG['host_os'].include?('w32')
 end
+
+CRUD_JT::Config.start_master(
+  encrypted_key: 'Cm7B68NWsMNNYjzMDREacmpe5sI1o0g40ZC9w1yQW3WOes7Gm59UsittLOHR2dciYiwmaYq98l3tG8h9yXVCxg==',
+  cheatcode: 'BAGUVIX'
+)
+
+p "Master: #{CRUD_JT::Config.master?}"
 
 # hash can not be empty
 begin
@@ -102,7 +110,7 @@ end
 # describe encrypted_key
 # when started
 begin
-  CRUD_JT::Config.start!
+  CRUD_JT::Config.start_master
 rescue RuntimeError => error
   p error.message == CRUD_JT::Validation.error_message(CRUD_JT::Validation::ERROR_ALREADY_STARTED)
 else
@@ -110,10 +118,9 @@ else
 end
 
 # with wrong token
-# p CRUD_JT.read('bla-bla-bla') == nil
+p CRUD_JT.read('bla-bla-bla') == nil
 p CRUD_JT.update('bla-bla-bla', { some_key: 41 }) == false
 p CRUD_JT.delete('bla-bla-bla') == false
-
 
 # without metadata
 p 'Checking without metadata...'
@@ -162,7 +169,7 @@ p CRUD_JT.update(token, data) == false
 p CRUD_JT.read(token) == nil
 
 # with silence read
-p "Checkinh silence read..."
+p "Checking silence read..."
 
 data = { user_id: 42, role: 11 }
 silence_read = 6
