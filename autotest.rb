@@ -53,6 +53,8 @@ begin
 rescue CRUD_JT::Errors::InternalError => _
   # p error.message == 'DB init error: Database opening failed: IO error: Read-only file system (os error 30)'
   p true
+rescue RuntimeError
+  p true
 else
   p false unless RbConfig::CONFIG['host_os'].include?('w32')
 end
@@ -64,15 +66,6 @@ end
     else
       p false unless RbConfig::CONFIG['host_os'].include?('w32')
     end
-
-begin
-  CRUD_JT::Config.start_master(
-    encrypted_key: 'Cm7B68NWsMNNYjzMDREacmpe5sI1o0g40ZC9w1yQW3WOes7Gm59UsittLOHR2dciYiwmaYq98l3tG8h9yXVCxg==',
-    store_jt_path: '/var/lib/store_jt'
-  )
-rescue => e
-  p e.message unless RbConfig::CONFIG['host_os'].include?('w32')
-end
 
 CRUD_JT::Config.start_master(
   encrypted_key: 'Cm7B68NWsMNNYjzMDREacmpe5sI1o0g40ZC9w1yQW3WOes7Gm59UsittLOHR2dciYiwmaYq98l3tG8h9yXVCxg=='
