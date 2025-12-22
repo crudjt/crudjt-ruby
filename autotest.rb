@@ -68,16 +68,14 @@ end
 begin
   CRUD_JT::Config.start_master(
     encrypted_key: 'Cm7B68NWsMNNYjzMDREacmpe5sI1o0g40ZC9w1yQW3WOes7Gm59UsittLOHR2dciYiwmaYq98l3tG8h9yXVCxg==',
-    store_jt_path: '/var/lib/store_jt',
-    cheatcode: CRUD_JT::Config::CHEATCODE
+    store_jt_path: '/var/lib/store_jt'
   )
 rescue => e
   p e.message unless RbConfig::CONFIG['host_os'].include?('w32')
 end
 
 CRUD_JT::Config.start_master(
-  encrypted_key: 'Cm7B68NWsMNNYjzMDREacmpe5sI1o0g40ZC9w1yQW3WOes7Gm59UsittLOHR2dciYiwmaYq98l3tG8h9yXVCxg==',
-  cheatcode: 'BAGUVIX'
+  encrypted_key: 'Cm7B68NWsMNNYjzMDREacmpe5sI1o0g40ZC9w1yQW3WOes7Gm59UsittLOHR2dciYiwmaYq98l3tG8h9yXVCxg=='
 )
 
 p "Master: #{CRUD_JT::Config.master?}"

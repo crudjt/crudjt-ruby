@@ -48,10 +48,6 @@ CRUD_JT.create({ user_id: 42, role: 11 }, ttl: 3600 * 24 * 30)
 => "HBmKFXoXgJ46mCqer1WXyQ"
 ```
 
-```ruby
-☕ = 🐰🥚
-```
-
 # R
 
 ```ruby
@@ -78,10 +74,6 @@ CRUD_JT.read("HBmKFXoXgJ46mCqer1WXyQ")
 => nil
 ```
 
-```ruby
-# with 🐰🥚
-```
-
 # U
 
 ```ruby
@@ -93,10 +85,6 @@ CRUD_JT.update("HBmKFXoXgJ46mCqer1WXyQ", { user_id: 42, role: 8 })
 # supported :ttl update
 CRUD_JT.update("HBmKFXoXgJ46mCqer1WXyQ", { user_id: 42, role: 8 }, ttl: 42)
 => true # {"metadata"=>{"ttl"=>42}, "data"=>{"user_id"=>42, "role"=>8}}
-```
-
-```ruby
-# supported 🐰🥚 update
 ```
 
 ```ruby

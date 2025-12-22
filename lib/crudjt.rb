@@ -50,7 +50,6 @@ module CRUD_JT
 
     load_store_jt_library
 
-    CHEATCODE = 'BAGUVIX' # 🐰🥚
     GRPC_HOST = '127.0.0.1'
     GRPC_PORT = 50051
 
@@ -74,10 +73,6 @@ module CRUD_JT
         @settings[:master]
       end
 
-      def hint_cheactcode
-        @settings[:cheatcode]
-      end
-
       def was_started
         @was_started
       end
@@ -97,14 +92,8 @@ module CRUD_JT
         @settings[:grpc_host] = options[:grpc_host] || GRPC_HOST
         @settings[:grpc_port] = options[:grpc_port] || GRPC_PORT
 
-        @settings[:cheatcode] = options[:cheatcode]
-
         result = JSON(start_store_jt(@settings[:encrypted_key], @settings[:store_jt_path]))
         raise CRUD_JT::ERRORS[result['code']], result['error_message'] unless result['ok']
-
-        if @settings[:cheatcode] == CRUD_JT::Config::CHEATCODE
-          STDOUT.puts("🐰🥚 You have activated optional param :silence_read for CRUD_JT on method create \nIdeal for one-time reads, email confirmation links, or limits on the number of operations \nEach read decrements :silence_read by 1, when the counter reaches zero — the token is deleted permanently")
-        end
 
         port = "#{@settings[:grpc_host]}:#{@settings[:grpc_port]}"
         grpc_server = TokenServiceImpl.call(port)
@@ -161,7 +150,6 @@ module CRUD_JT
 
     ttl ||= -1
     silence_read ||= -1
-    silence_read = -1 unless CRUD_JT::Config.hint_cheactcode == CRUD_JT::Config::CHEATCODE
 
     packed_data = MessagePack.pack(hash)
     hash_bytesize = packed_data.bytesize
@@ -232,7 +220,6 @@ module CRUD_JT
 
     ttl ||= -1
     silence_read ||= -1
-    silence_read = -1 unless CRUD_JT::Config.hint_cheactcode == CRUD_JT::Config::CHEATCODE
 
     # Creation buffer with packed data
     buffer = FFI::MemoryPointer.new(:char, hash_bytesize)
