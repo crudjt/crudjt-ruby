@@ -99,12 +99,10 @@ module CRUD_JT
         grpc_server = TokenServiceImpl.call(port)
 
         at_exit do
-          STDOUT.puts "Shutting down gRPC server on port: #{port}"
           grpc_server.stop
         end
 
         Thread.new do
-          STDOUT.puts "gRPC Leader running on port: #{port}"
           grpc_server.run_till_terminated
         end
 

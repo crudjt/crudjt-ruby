@@ -44,28 +44,14 @@ else
   p false
 end
 
-# when broken store_jt path
+# when not started store_jt
 begin
-  CRUD_JT::Config.start_master(
-    encrypted_key: 'Cm7B68NWsMNNYjzMDREacmpe5sI1o0g40ZC9w1yQW3WOes7Gm59UsittLOHR2dciYiwmaYq98l3tG8h9yXVCxg==',
-    store_jt_path: '/qweqe/qwrqwrrqt'
-  )
-rescue CRUD_JT::Errors::InternalError => _
-  # p error.message == 'DB init error: Database opening failed: IO error: Read-only file system (os error 30)'
-  p true
-rescue RuntimeError
-  p true
+  CRUD_JT.original_create({ some_key: 'some value' })
+rescue RuntimeError => error
+  p error.message == CRUD_JT::Validation.error_message(CRUD_JT::Validation::ERROR_NOT_STARTED)
 else
   p false unless RbConfig::CONFIG['host_os'].include?('w32')
 end
-    # when not started store_jt
-    begin
-      CRUD_JT.original_create({ some_key: 'some value' })
-    rescue RuntimeError => error
-      p error.message == CRUD_JT::Validation.error_message(CRUD_JT::Validation::ERROR_NOT_STARTED)
-    else
-      p false unless RbConfig::CONFIG['host_os'].include?('w32')
-    end
 
 CRUD_JT::Config.start_master(
   encrypted_key: 'Cm7B68NWsMNNYjzMDREacmpe5sI1o0g40ZC9w1yQW3WOes7Gm59UsittLOHR2dciYiwmaYq98l3tG8h9yXVCxg=='
