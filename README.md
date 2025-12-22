@@ -23,7 +23,7 @@ Or install directly
 gem install crudjt
 ```
 
-Require CRUD JT in your project
+Require CRUDJT in your project
 
 ```ruby
 require 'crudjt'
@@ -111,7 +111,7 @@ CRUD_JT.delete("HBmKFXoXgJ46mCqer1WXyQ")
 ARM64 (Apple M1+), macOS 15.5/15.6  
 Ruby 3.4.4
 
-| Function | CRUD JT (Ruby) | JWT (Ruby) | redis-session-store (Ruby, Rails 8.0.4) |
+| Function | CRUDJT (Ruby) | JWT (Ruby) | redis-session-store (Ruby, Rails 8.0.4) |
 |----------|-------|------|------|
 | C        | `0.34 second` ![Logo Favicon Light](logos/crud_jt_logo_favicon_white.png#gh-light-mode-only) ![Logo Favicon Dark](logos/crud_jt_logo_favicon_black.png#gh-dark-mode-only) | 0.641 second | 4.057 seconds |
 | R        | `0.144 second` ![Logo Favicon Light](logos/crud_jt_logo_favicon_white.png#gh-light-mode-only) ![Logo Favicon Dark](logos/crud_jt_logo_favicon_black.png#gh-dark-mode-only) | 1.019 second | 7.011 seconds |
@@ -150,7 +150,7 @@ CRUD_JT::Config.encrypted_key("some_base64_key")
 # Optional configuration
 CRUD_JT::Config.store_jt_path("/custom/path/to/store_jt")
 
-# Start the CRUD JT and Store JT
+# Start the CRUDJT and Store JT
 CRUD_JT::Config.start!
 ```
 
@@ -162,7 +162,7 @@ Sets the encrypted key (**required**)
 Overrides the default Store JT path (**optional**)
 
 #### `start!`
-Initializes the CRUD JT and opens the Store JT (**must be called last**)
+Initializes the CRUDJT and opens the Store JT (**must be called last**)
 
 # Limits
 The library has the following limits and requirements
@@ -184,7 +184,7 @@ The library has the following limits and requirements
 
 
 # Lincense
-CRUD JT is released under the [MIT License](LICENSE.txt)
+CRUDJT is released under the [MIT License](LICENSE.txt)
 
 <p align="center">
   💘 Shoot your g . ? Love me out via <a href="https://www.patreon.com/crudjt">Patreon Sponsors</a>!
