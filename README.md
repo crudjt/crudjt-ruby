@@ -187,5 +187,5 @@ The library has the following limits and requirements
 CRUD JT is released under the [MIT License](LICENSE.txt)
 
 <p align="center">
-  💘 Shoot your g . ? Love me out via <a href="https://www.patreon.com/crudjt">Github Sponsors</a>!
+  💘 Shoot your g . ? Love me out via <a href="https://www.patreon.com/crudjt">Patreon Sponsors</a>!
 </p>
