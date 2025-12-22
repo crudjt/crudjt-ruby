@@ -115,7 +115,7 @@ Ruby 3.4.4
 
 [Full benchmark results](https://github.com/exwarvlad/benchmarks)
 
-# Storage (File-based)  
+# Storage (File-backed)  
 
 ## Disk footprint  
 **40k** tokens of **256 bytes** each — median over 10 creates  
@@ -123,12 +123,12 @@ darwin23, APFS
 
 `48 MB`  
 
-[Full disk footprint results](https://github.com/Cm7B68NWsMNNYjzMDREacmpe5sI1o0g40ZC9w1y/disk_footprint) 
+[Full disk footprint results](https://github.com/Cm7B68NWsMNNYjzMDREacmpe5sI1o0g40ZC9w1y/disk_footprint)
 
 ## Path Lookup Order
 Stored tokens are placed in the **file system** according to the following order
 
-1. Explicitly set via `CRUDJT::Config.store_jt_path('custom/path/to/file_system_db')`
+1. Explicitly set via `CRUDJT::Config.start_master(store_jt_path: 'custom/path/to/file_system_db')`
 2. Default system location
    - **Linux**: `/var/lib/store_jt`
    - **macOS**: `/usr/local/var/store_jt`
@@ -136,36 +136,9 @@ Stored tokens are placed in the **file system** according to the following order
 3. Project root directory (fallback)
 
 ## Storage Characteristics
-* Store JT **automatically removing expired tokens** every 24 hours without blocking the main thread   
-* **Store JT automatically fsyncs every 500ms**, meanwhile tokens ​​are available from cache
-* Store JT is available for one process to open per instance for the time being
-
-## Configuration
-
-You can configure the library before starting it
-
-```ruby
-require "crudjt"
-
-# Required configuration
-CRUDJT::Config.encrypted_key("some_base64_key")
-
-# Optional configuration
-CRUDJT::Config.store_jt_path("/custom/path/to/store_jt")
-
-# Start the CRUDJT and Store JT
-CRUDJT::Config.start!
-```
-
-
-#### `encrypted_key(base64_key)`
-Sets the encrypted key (**required**)
-
-#### `store_jt_path(path_to_db)`
-Overrides the default Store JT path (**optional**)
-
-#### `start!`
-Initializes the CRUDJT and opens the Store JT (**must be called last**)
+* CRUDJT **automatically removing expired tokens** after start and every 24 hours without blocking the main thread   
+* **Storage automatically fsyncs every 500ms**, meanwhile tokens ​​are available from cache
+* For multi-process scenarios, the library uses gRPC over an insecure local port and is intended for local processes only, not for inter-machine or internet-facing communication
 
 # Limits
 The library has the following limits and requirements
