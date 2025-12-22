@@ -4,7 +4,7 @@
 </p>
 
 <p align="center">
-  Simplifies user session. Login/Logout/Authorization
+  Fast, file-backed JSON token for REST APIs with multi-process support
 </p>
 
 <p align="center">
@@ -23,53 +23,55 @@ Or install directly
 gem install crudjt
 ```
 
-Require CRUDJT in your project
+Start CRUDJT master in your project
 
 ```ruby
 require 'crudjt'
 
 # openssl rand -base64 48 # In your terminal
 # => your_encrypted_base64/48
-CRUD_JT::Config.encrypted_key('your_encrypted_base64/32/48/64')
-               .store_jt_path('your_path_to_file_storage') # optional
-               .start!
+CRUDJT::Config.start_master(
+  encrypted_key: 'your_encrypted_base64/32/48/64',
+  store_jt_path: 'your_path_to_file_storage', # optional
+  grpc_host: '127.0.0.1', # default
+  grpc_port: '50051' # default
+)
+```
+
+Or connect to master
+
+```ruby
+require 'crudjt'
+
+CRUDJT::Config.connect_to_master(
+  grpc_host: '127.0.0.1', # default
+  grpc_port: '50051' # default
+)
 ```
 
 # C
 
 ```ruby
-CRUD_JT.create({ user_id: 42, role: 11 })
-=> "HBmKFXoXgJ46mCqer1WXyQ"
-```
+data = { user_id: 42, role: 11 } # required
+ttl = 3600 * 24 * 30 # optional # Dynamic time to live token in seconds
 
-```ruby
-# with :ttl — token time-to-live in seconds
-CRUD_JT.create({ user_id: 42, role: 11 }, ttl: 3600 * 24 * 30)
+# Optional # Each read decrements silence_read by 1, when the counter reaches
+# zero — the token is deleted permanently
+silence_read = 10
+
+CRUDJT.create(data, ttl: ttl, silence_read: silence_read)
 => "HBmKFXoXgJ46mCqer1WXyQ"
 ```
 
 # R
 
 ```ruby
-# ...
-CRUD_JT.read("HBmKFXoXgJ46mCqer1WXyQ")
-=> {"data"=>{"user_id"=>42, "role"=>11}}
+CRUDJT.read("HBmKFXoXgJ46mCqer1WXyQ")
+=> {"metadata"=>{"ttl"=>101001, "silence_read"=>9}, "data"=>{"user_id"=>42, "role"=>11}}
 ```
 
 ```ruby
-# with :ttl
-CRUD_JT.read("HBmKFXoXgJ46mCqer1WXyQ")
-=> {"metadata"=>{"ttl"=>3}, "data"=>{"user_id"=>42, "role"=>11}}
-
-# after 1 second
-CRUD_JT.read("HBmKFXoXgJ46mCqer1WXyQ")
-=> {"metadata"=>{"ttl"=>2}, "data"=>{"user_id"=>42, "role"=>11}}
-
-# still second
-CRUD_JT.read("HBmKFXoXgJ46mCqer1WXyQ")
-=> {"metadata"=>{"ttl"=>1}, "data"=>{"user_id"=>42, "role"=>11}}
-
-# ups
+# when expired/not found token
 CRUD_JT.read("HBmKFXoXgJ46mCqer1WXyQ")
 => nil
 ```
@@ -77,32 +79,25 @@ CRUD_JT.read("HBmKFXoXgJ46mCqer1WXyQ")
 # U
 
 ```ruby
-CRUD_JT.update("HBmKFXoXgJ46mCqer1WXyQ", { user_id: 42, role: 8 })
-=> true # {"data"=>{"user_id"=>42, "role"=>8}}
-```
-
-```ruby
-# supported :ttl update
-CRUD_JT.update("HBmKFXoXgJ46mCqer1WXyQ", { user_id: 42, role: 8 }, ttl: 42)
-=> true # {"metadata"=>{"ttl"=>42}, "data"=>{"user_id"=>42, "role"=>8}}
+CRUDJT.update("HBmKFXoXgJ46mCqer1WXyQ", { user_id: 42, role: 8 }, ttl: 600, silence_read: 100)
+=> true # {"metadata"=>{"ttl"=>600, "silence_read"=>100}, "data"=>{"user_id"=>42, "role"=>8}}
 ```
 
 ```ruby
 # when expired/not found token
-CRUD_JT.update("HBmKFXoXgJ46mCqer1WXyQ", { user_id: 42, role: 8 })
+CRUDJT.update("HBmKFXoXgJ46mCqer1WXyQ", { user_id: 42, role: 8 })
 => false
 ```
 
 # D
 ```ruby
-# when token exist
-CRUD_JT.delete("HBmKFXoXgJ46mCqer1WXyQ")
+CRUDJT.delete("HBmKFXoXgJ46mCqer1WXyQ")
 => true
 ```
 
 ```ruby
 # when expired/not found token
-CRUD_JT.delete("HBmKFXoXgJ46mCqer1WXyQ")
+CRUDJT.delete("HBmKFXoXgJ46mCqer1WXyQ")
 => false
 ```
 
@@ -125,7 +120,7 @@ Ruby 3.4.4
 ## Path Lookup Order
 Stored tokens are placed in the **file system** according to the following order
 
-1. Explicitly set via `CRUD_JT::Config.store_jt_path('custom/path/to/file_system_db')`
+1. Explicitly set via `CRUDJT::Config.store_jt_path('custom/path/to/file_system_db')`
 2. Default system location
    - **Linux**: `/var/lib/store_jt`
    - **macOS**: `/usr/local/var/store_jt`
@@ -145,13 +140,13 @@ You can configure the library before starting it
 require "crudjt"
 
 # Required configuration
-CRUD_JT::Config.encrypted_key("some_base64_key")
+CRUDJT::Config.encrypted_key("some_base64_key")
 
 # Optional configuration
-CRUD_JT::Config.store_jt_path("/custom/path/to/store_jt")
+CRUDJT::Config.store_jt_path("/custom/path/to/store_jt")
 
 # Start the CRUDJT and Store JT
-CRUD_JT::Config.start!
+CRUDJT::Config.start!
 ```
 
 
