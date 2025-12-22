@@ -71,4 +71,3 @@ jobs:
     - name: Run tests
       run: |
         ruby autotest.rb
-        du -sh /var/lib/store_jt
