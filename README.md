@@ -13,6 +13,9 @@
   </a>
 </p>
 
+## Why?  
+[Escape the JWT trap: predictable login, safe logout](https://medium.com/@CoffeeMainer/jwt-trap-login-logout-under-control-7f4495d6024d)
+
 # Installation
 
 ```sh
