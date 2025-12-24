@@ -1,6 +1,6 @@
 require 'lru_redux'
 
-module CRUD_JT
+module CRUDJT
   class LRUCache
     CACHE_CAPACITY = 40_000
 

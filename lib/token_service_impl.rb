@@ -17,14 +17,14 @@ class TokenServiceImpl < Token::TokenService::Service
     ttl = nil if ttl == -1
     silence_read = nil if silence_read == -1
 
-    token = CRUD_JT.original_create(packed_data, ttl: ttl, silence_read: silence_read)
+    token = CRUDJT.original_create(packed_data, ttl: ttl, silence_read: silence_read)
 
     Token::CreateTokenResponse.new(token: token)
   end
 
   def read_token(request, _unused_call)
     raw_token = request.token
-    result_hash = CRUD_JT.original_read(raw_token)
+    result_hash = CRUDJT.original_read(raw_token)
     packed_data = MessagePack.pack(result_hash)
 
     Token::ReadTokenResponse.new(packed_data: packed_data)
@@ -42,7 +42,7 @@ class TokenServiceImpl < Token::TokenService::Service
     ttl = nil if ttl == -1
     silence_read = nil if silence_read == -1
 
-    result = CRUD_JT.original_update(raw_token, packed_data, ttl: ttl, silence_read: silence_read)
+    result = CRUDJT.original_update(raw_token, packed_data, ttl: ttl, silence_read: silence_read)
 
     Token::UpdateTokenResponse.new(result: result)
   end
@@ -50,7 +50,7 @@ class TokenServiceImpl < Token::TokenService::Service
   def delete_token(request, _unused_call)
     raw_token = request.token
 
-    result = CRUD_JT.original_delete(raw_token)
+    result = CRUDJT.original_delete(raw_token)
 
     Token::DeleteTokenResponse.new(result: result)
   end

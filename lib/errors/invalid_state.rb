@@ -1,4 +1,4 @@
-module CRUD_JT
+module CRUDJT
   module Errors
     class InvalidState < StandardError; end
   end

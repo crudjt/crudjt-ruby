@@ -1,6 +1,6 @@
 require 'base64'
 
-module CRUD_JT
+module CRUDJT
   module Validation
     U64_MAX = 2**64 - 1
 
@@ -14,8 +14,8 @@ module CRUD_JT
     ERROR_ENCRYPTED_KEY_NOT_SET = 2
 
     ERROR_MESSAGES = {
-      ERROR_ALREADY_STARTED => 'CRUD_JT already started',
-      ERROR_NOT_STARTED => 'CRUD_JT has not started',
+      ERROR_ALREADY_STARTED => 'CRUDJT already started',
+      ERROR_NOT_STARTED => 'CRUDJT has not started',
       ERROR_ENCRYPTED_KEY_NOT_SET => 'Encrypted key is blank'
     }
 
