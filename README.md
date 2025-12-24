@@ -141,7 +141,9 @@ Stored tokens are placed in the **file system** according to the following order
 ## Storage Characteristics
 * CRUDJT **automatically removing expired tokens** after start and every 24 hours without blocking the main thread   
 * **Storage automatically fsyncs every 500ms**, meanwhile tokens ​​are available from cache
-* For multi-process scenarios, the library uses gRPC over an insecure local port and is intended for local processes only, not for inter-machine or internet-facing communication
+
+# Multi-process Coordination
+For multi-process scenarios, CRUDJT uses gRPC over an insecure local port for same-host communication only. It is not intended for inter-machine or internet-facing usage
 
 # Limits
 The library has the following limits and requirements
