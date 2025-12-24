@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  Simplifies user session. Login/Logout/Authorization
+  Fast, file-backed JSON token for REST APIs with multi-process support
 </p>
 
 <p align="center">
@@ -11,6 +11,9 @@
     <img src="logos/buy_me_a_coffee_orange.svg" alt="Buy Me a Coffee"/>
   </a>
 </p>
+
+## Why?  
+[Escape the JWT trap: predictable login, safe logout](https://medium.com/@CoffeeMainer/jwt-trap-login-logout-under-control-7f4495d6024d)
 
 # Installation
 
@@ -22,98 +25,81 @@ Or install directly
 gem install crudjt
 ```
 
-Require CRUD JT in your project
+Start CRUDJT master in your project
 
 ```ruby
 require 'crudjt'
 
 # openssl rand -base64 48 # In your terminal
 # => your_encrypted_base64/48
-CRUD_JT::Config.encrypted_key('your_encrypted_base64/32/48/64')
-               .store_jt_path('your_path_to_file_storage') # optional
-               .start!
+CRUDJT::Config.start_master(
+  encrypted_key: 'your_encrypted_base64/32/48/64',
+  store_jt_path: 'your_path_to_file_storage', # optional
+  grpc_host: '127.0.0.1', # default
+  grpc_port: '50051' # default
+)
+```
+
+Or connect to master
+
+```ruby
+require 'crudjt'
+
+CRUDJT::Config.connect_to_master(
+  grpc_host: '127.0.0.1', # default
+  grpc_port: '50051' # default
+)
 ```
 
 # C
 
 ```ruby
-CRUD_JT.create({ user_id: 42, role: 11 })
-=> "HBmKFXoXgJ46mCqer1WXyQ"
-```
+data = { user_id: 42, role: 11 } # required
+ttl = 3600 * 24 * 30 # optional # Dynamic time to live token in seconds
 
-```ruby
-# with :ttl — token time-to-live in seconds
-CRUD_JT.create({ user_id: 42, role: 11 }, ttl: 3600 * 24 * 30)
-=> "HBmKFXoXgJ46mCqer1WXyQ"
-```
+# Optional # Each read decrements silence_read by 1, when the counter reaches
+# zero — the token is deleted permanently
+silence_read = 10
 
-```ruby
-☕ = 🐰🥚
+CRUDJT.create(data, ttl: ttl, silence_read: silence_read)
+=> "HBmKFXoXgJ46mCqer1WXyQ"
 ```
 
 # R
 
 ```ruby
-# ...
-CRUD_JT.read("HBmKFXoXgJ46mCqer1WXyQ")
-=> {"data"=>{"user_id"=>42, "role"=>11}}
+CRUDJT.read("HBmKFXoXgJ46mCqer1WXyQ")
+=> {"metadata"=>{"ttl"=>101001, "silence_read"=>9}, "data"=>{"user_id"=>42, "role"=>11}}
 ```
 
 ```ruby
-# with :ttl
-CRUD_JT.read("HBmKFXoXgJ46mCqer1WXyQ")
-=> {"metadata"=>{"ttl"=>3}, "data"=>{"user_id"=>42, "role"=>11}}
-
-# after 1 second
-CRUD_JT.read("HBmKFXoXgJ46mCqer1WXyQ")
-=> {"metadata"=>{"ttl"=>2}, "data"=>{"user_id"=>42, "role"=>11}}
-
-# still second
-CRUD_JT.read("HBmKFXoXgJ46mCqer1WXyQ")
-=> {"metadata"=>{"ttl"=>1}, "data"=>{"user_id"=>42, "role"=>11}}
-
-# ups
+# when expired/not found token
 CRUD_JT.read("HBmKFXoXgJ46mCqer1WXyQ")
 => nil
-```
-
-```ruby
-# with 🐰🥚
 ```
 
 # U
 
 ```ruby
-CRUD_JT.update("HBmKFXoXgJ46mCqer1WXyQ", { user_id: 42, role: 8 })
-=> true # {"data"=>{"user_id"=>42, "role"=>8}}
-```
-
-```ruby
-# supported ttl update
-CRUD_JT.update("HBmKFXoXgJ46mCqer1WXyQ", { user_id: 42, role: 8 }, ttl: 42)
-=> true # {"metadata"=>{"ttl"=>42}, "data"=>{"user_id"=>42, "role"=>8}}
-```
-
-```ruby
-# supported 🐰🥚 update
+CRUDJT.update("HBmKFXoXgJ46mCqer1WXyQ", { user_id: 42, role: 8 }, ttl: 600, silence_read: 100)
+=> true # {"metadata"=>{"ttl"=>600, "silence_read"=>100}, "data"=>{"user_id"=>42, "role"=>8}}
 ```
 
 ```ruby
 # when expired/not found token
-CRUD_JT.update("HBmKFXoXgJ46mCqer1WXyQ", { user_id: 42, role: 8 })
+CRUDJT.update("HBmKFXoXgJ46mCqer1WXyQ", { user_id: 42, role: 8 })
 => false
 ```
 
 # D
 ```ruby
-# when token exist
-CRUD_JT.delete("HBmKFXoXgJ46mCqer1WXyQ")
+CRUDJT.delete("HBmKFXoXgJ46mCqer1WXyQ")
 => true
 ```
 
 ```ruby
 # when expired/not found token
-CRUD_JT.delete("HBmKFXoXgJ46mCqer1WXyQ")
+CRUDJT.delete("HBmKFXoXgJ46mCqer1WXyQ")
 => false
 ```
 
@@ -122,21 +108,29 @@ CRUD_JT.delete("HBmKFXoXgJ46mCqer1WXyQ")
 ARM64 (Apple M1+), macOS 15.5/15.6  
 Ruby 3.4.4
 
-| Function | CRUD JT (Ruby) | JWT (Ruby) | redis-session-store (Ruby, Rails 8.0.4) |
+| Function | CRUDJT (Ruby) | JWT (Ruby) | redis-session-store (Ruby, Rails 8.0.4) |
 |----------|-------|------|------|
-| C        | `0.344 second` ![Logo Favicon Dark](logos/crud_jt_logo_favicon_white.png) | 0.641 second | 4.057 seconds |
-| R        | `0.181 second` ![Logo Favicon Dark](logos/crud_jt_logo_favicon_white.png) | 1.019 second | 7.011 seconds |
-| U        | `0.591 second` ![Logo Favicon Dark](logos/crud_jt_logo_favicon_white.png) | X | 3.49 seconds |
-| D        | `0.282 second` ![Logo Favicon Dark](logos/crud_jt_logo_favicon_white.png) | X | 6.589 seconds |
+| C        | `0.34 second` ![Logo Favicon Light](logos/crud_jt_logo_favicon_white.png) | 0.641 second | 4.057 seconds |
+| R        | `0.144 second` ![Logo Favicon Light](logos/crud_jt_logo_favicon_white.png) | 1.019 second | 7.011 seconds |
+| U        | `0.46 second` ![Logo Favicon Light](logos/crud_jt_logo_favicon_white.png) | X | 3.49 seconds |
+| D        | `0.194 second` ![Logo Favicon Light](logos/crud_jt_logo_favicon_white.png) | X | 6.589 seconds |
 
-[Full results](https://github.com/exwarvlad/benchmarks)
+[Full benchmark results](https://github.com/exwarvlad/benchmarks)
 
-# Storage (Store JT)
+# Storage (File-backed)  
+
+## Disk footprint  
+**40k** tokens of **256 bytes** each — median over 10 creates  
+darwin23, APFS  
+
+`48 MB`  
+
+[Full disk footprint results](https://github.com/Cm7B68NWsMNNYjzMDREacmpe5sI1o0g40ZC9w1y/disk_footprint)
 
 ## Path Lookup Order
 Stored tokens are placed in the **file system** according to the following order
 
-1. Explicitly set via `CRUD_JT::Config.store_jt_path('custom/path/to/file_system_db')`
+1. Explicitly set via `CRUDJT::Config.start_master(store_jt_path: 'custom/path/to/file_system_db')`
 2. Default system location
    - **Linux**: `/var/lib/store_jt`
    - **macOS**: `/usr/local/var/store_jt`
@@ -144,36 +138,11 @@ Stored tokens are placed in the **file system** according to the following order
 3. Project root directory (fallback)
 
 ## Storage Characteristics
-* Store JT **automatically removing expired tokens** every 24 hours without blocking the main thread   
-* **Store JT automatically fsyncs every 500ms**, meanwhile tokens ​​are available from cache
-* Store JT is available for one process to open per instance for the time being
+* CRUDJT **automatically removing expired tokens** after start and every 24 hours without blocking the main thread   
+* **Storage automatically fsyncs every 500ms**, meanwhile tokens ​​are available from cache
 
-## Configuration
-
-You can configure the library before starting it
-
-```ruby
-require "crudjt"
-
-# Required configuration
-CRUD_JT.encrypted_key("some_base64_key")
-
-# Optional configuration
-CRUD_JT.store_jt_path("/custom/path/to/store_jt")
-
-# Start the CRUD JT and Store JT
-CRUD_JT.start!
-```
-
-
-#### `encrypted_key(base64_key)`
-Sets the encrypted key (**required**)
-
-#### `store_jt_path(path_to_db)`
-Overrides the default Store JT path (**optional**)
-
-#### `start!`
-Initializes the CRUD JT and opens the Store JT (**must be called last**)
+# Multi-process Coordination
+For multi-process scenarios, CRUDJT uses gRPC over an insecure local port for same-host communication only. It is not intended for inter-machine or internet-facing usage
 
 # Limits
 The library has the following limits and requirements
@@ -186,7 +155,7 @@ The library has the following limits and requirements
 
 # Contact & Support
 <p align="center">
-  <img src="logos/crud_jt_logo_favicon_black_160.png" alt="Business Card" />
+  <img src="logos/crud_jt_logo_favicon_black_160.png" alt="Visit Light" />
 </p>
 
 - **Custom integrations / new features / collaboration**: support@crudjt.com  
@@ -194,8 +163,8 @@ The library has the following limits and requirements
 
 
 # Lincense
-CRUD JT is released under the [MIT License](LICENSE.txt)
+CRUDJT is released under the [MIT License](LICENSE.txt)
 
 <p align="center">
-  💘 Shoot your g . ? Love me out via <a href="https://www.patreon.com/crudjt">Github Sponsors</a>!
+  💘 Shoot your g . ? Love me out via <a href="https://www.patreon.com/crudjt">Patreon Sponsors</a>!
 </p>
