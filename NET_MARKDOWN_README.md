@@ -36,7 +36,7 @@ CRUDJT::Config.start_master(
   encrypted_key: 'your_encrypted_base64/32/48/64',
   store_jt_path: 'your_path_to_file_storage', # optional
   grpc_host: '127.0.0.1', # default
-  grpc_port: '50051' # default
+  grpc_port: 50051 # default
 )
 ```
 
@@ -47,7 +47,7 @@ require 'crudjt'
 
 CRUDJT::Config.connect_to_master(
   grpc_host: '127.0.0.1', # default
-  grpc_port: '50051' # default
+  grpc_port: 50051 # default
 )
 ```
 
