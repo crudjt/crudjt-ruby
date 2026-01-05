@@ -16,6 +16,13 @@
 ## Why?  
 [Escape the JWT trap: predictable login, safe logout](https://medium.com/@CoffeeMainer/jwt-trap-login-logout-under-control-7f4495d6024d)
 
+CRUDJT runs a small local coordinator inside your app.
+One process acts as a leader, all others talk to it
+
+## In short
+
+CRUDJT gives you stateful sessions without JWT pain and without distributed complexity
+
 # Installation
 
 ```sh
@@ -26,22 +33,45 @@ Or install directly
 gem install crudjt
 ```
 
-Start CRUDJT master in your project
+## How to use
+
+- One process starts the master
+- All other processes connect to it
+
+## Start CRUDJT master (once)
+
+Start the CRUDJT master when your application boots  
+
+Only **one process** should do this  
+The master is responsible for session state and coordination  
+
+### Generate an encrypted key
+
+```sh
+export CRUDJT_ENCRYPTED_KEY=$(openssl rand -base64 48)
+```
 
 ```ruby
 require 'crudjt'
 
-# openssl rand -base64 48 # In your terminal
-# => your_encrypted_base64/48
 CRUDJT::Config.start_master(
-  encrypted_key: 'your_encrypted_base64/32/48/64',
-  store_jt_path: 'your_path_to_file_storage', # optional
+  encrypted_key: ENV.fetch('CRUDJT_ENCRYPTED_KEY'),
+  store_jt_path: 'path/to/local/storage', # optional
   grpc_host: '127.0.0.1', # default
   grpc_port: 50051 # default
 )
 ```
 
-Or connect to master
+The encrypted key must be the same for all processes
+
+## Connect to an existing CRUDJT master
+
+Use this in all other processes  
+
+Typical examples:
+- multiple local processes
+- background jobs
+- forked processes
 
 ```ruby
 require 'crudjt'
@@ -51,6 +81,13 @@ CRUDJT::Config.connect_to_master(
   grpc_port: 50051 # default
 )
 ```
+
+### Process layout
+
+App boot  
+ ├─ Process A → start_master  
+ ├─ Process B → connect_to_master  
+ └─ Process C → connect_to_master  
 
 # C
 
