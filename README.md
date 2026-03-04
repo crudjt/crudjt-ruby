@@ -1,6 +1,9 @@
 <p align="center">
-  <img src="logos/crud_jt_logo_black.png#gh-light-mode-only" alt="Logo Light" />
-  <img src="logos/crud_jt_logo.png#gh-dark-mode-only" alt="Logo Dark" />
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="logos/crud_jt_logo.png">
+    <source media="(prefers-color-scheme: light)" srcset="logos/crud_jt_logo_black.png">
+    <img alt="Shows a black logo in light color mode and a white one in dark color mode" src="logos/crud_jt_logo_black.png">
+  </picture>
 </p>
 
 <p align="center">
