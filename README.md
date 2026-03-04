@@ -180,8 +180,11 @@ The library has the following limits and requirements
 
 # Contact & Support
 <p align="center">
-  <img src="logos/crud_jt_logo_favicon_black_160.png#gh-light-mode-only" alt="Visit Light" />
-  <img src="logos/crud_jt_logo_favicon_white_160.png#gh-dark-mode-only" alt="Visit Dark" />
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="logos/crud_jt_logo_favicon_white_160.png">
+    <source media="(prefers-color-scheme: light)" srcset="logos/crud_jt_logo_favicon_black_160.png">
+    <img alt="Shows a black favicon in light color mode and a white one in dark color mode" src="logos/crud_jt_logo_favicon_black_160.png">
+  </picture>
 </p>
 
 - **Custom integrations / new features / collaboration**: support@crudjt.com  
