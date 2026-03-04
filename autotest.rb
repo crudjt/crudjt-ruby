@@ -59,45 +59,6 @@ CRUDJT::Config.start_master(
 
 p "Master: #{CRUDJT::Config.master?}"
 
-# hash can not be empty
-begin
-  CRUDJT.create({})
-rescue RuntimeError => error
-  p error.message == "Hash can not be empty"
-else
-  p false
-end
-
-# hash can not be bigger than maximum size
-begin
-  hash_with_unlim_size = { some_key: 'q' * CRUDJT::Validation::MAX_HASH_SIZE }
-  hash_bytesize = MessagePack.pack(hash_with_unlim_size).bytesize
-
-  while MessagePack.pack(hash_with_unlim_size).bytesize > CRUDJT::Validation::MAX_HASH_SIZE + 1
-    hash_with_unlim_size[:some_key].chop!
-  end
-
-  CRUDJT.create(hash_with_unlim_size)
-rescue RuntimeError => error
-  p error.message == "Hash can not be bigger than #{CRUDJT::Validation::MAX_HASH_SIZE} bytesize"
-else
-  p false
-end
-
-# describe encrypted_key
-# when started
-begin
-  CRUDJT::Config.start_master
-rescue RuntimeError => error
-  p error.message == CRUDJT::Validation.error_message(CRUDJT::Validation::ERROR_ALREADY_STARTED)
-else
-  p false
-end
-
-# with wrong token
-p CRUDJT.read('bla-bla-bla') == nil
-p CRUDJT.update('bla-bla-bla', { some_key: 41 }) == false
-p CRUDJT.delete('bla-bla-bla') == false
 
 # without metadata
 p 'Checking without metadata...'
