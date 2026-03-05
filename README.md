@@ -1,13 +1,11 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="logos/crud_jt_logo.png">
-    <source media="(prefers-color-scheme: light)" srcset="logos/crud_jt_logo_black.png">
-    <img alt="Shows a black logo in light color mode and a white one in dark color mode" src="logos/crud_jt_logo_black.png">
+    <source media="(prefers-color-scheme: dark)" srcset="logos/crudjt_logo_white_on_dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="logos/crudjt_logo_dark_on_white.svg">
+    <img alt="Shows a black logo" src="logos/crudjt_logo_dark.png">
   </picture>
-</p>
-
-<p align="center">
-  Fast, file-backed JSON token for REST APIs with multi-process support
+    </br>
+    Ruby SDK for the fast, file-backed, scalable JSON token engine
 </p>
 
 <p align="center">
@@ -181,9 +179,9 @@ The library has the following limits and requirements
 # Contact & Support
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="logos/crud_jt_logo_favicon_white_160.png">
-    <source media="(prefers-color-scheme: light)" srcset="logos/crud_jt_logo_favicon_black_160.png">
-    <img alt="Shows a black favicon in light color mode and a white one in dark color mode" src="logos/crud_jt_logo_favicon_black_160.png">
+    <source media="(prefers-color-scheme: dark)" srcset="logos/crudjt_favicon_160x160_white_on_dark.svg" width=160 height=160>
+    <source media="(prefers-color-scheme: light)" srcset="logos/crudjt_favicon_160x160_dark_on_white.svg" width=160 height=160>
+    <img alt="Shows a black favicon in light color mode and a white one in dark color mode" src="logos/crudjt_favicon_160x160_white.png" width=160 height=160>
   </picture>
 </p>
 
