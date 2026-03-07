@@ -2,7 +2,7 @@
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="logos/crudjt_logo_white_on_dark.svg">
     <source media="(prefers-color-scheme: light)" srcset="logos/crudjt_logo_dark_on_white.svg">
-    <img alt="Shows a black logo" src="logos/crudjt_logo_dark.png">
+    <img alt="Shows a dark logo" src="logos/crudjt_logo_dark.png">
   </picture>
     </br>
     Ruby SDK for the fast, file-backed, scalable JSON token engine
@@ -23,10 +23,11 @@ Optimized for vertical scaling on a single server
 
 # Installation
 
+With Bundler:  
 ```sh
 bundle add crudjt
 ```
-Or install directly  
+Or via RubyGems:  
 ```sh
 gem install crudjt
 ```
@@ -38,17 +39,20 @@ gem install crudjt
 
 ## Start CRUDJT master (once)
 
-Start the CRUDJT master when your application boots  
+Start the CRUDJT master when your application boots
 
-Only **one process** should do this  
-The master is responsible for session state and coordination  
+Only **one process** can do this for a **single token storage**  
 
-### Generate an encrypted key
+The master process manages sessions and coordination    
+All functions can also be used directly from it
+
+### Generate an encrypted key (terminal)
 
 ```sh
 export CRUDJT_ENCRYPTED_KEY=$(openssl rand -base64 48)
 ```
 
+### Start master (ruby)
 ```ruby
 require 'crudjt'
 
@@ -60,7 +64,7 @@ CRUDJT::Config.start_master(
 )
 ```
 
-The encrypted key must be the same for all processes
+*Important: Use the same `encrypted_key` across all sessions. If the key changes, previously stored tokens cannot be decrypted and will return `nil` or `false`*  
 
 ## Start CRUDJT master in Docker
 > `docker-compose.yml` will be published after 1.0.0-beta Docker image builds
@@ -94,52 +98,63 @@ App boot
 
 ```ruby
 data = { user_id: 42, role: 11 } # required
-ttl = 3600 * 24 * 30 # optional # Dynamic time to live token in seconds
+ttl = 3600 * 24 * 30 # optional: token lifetime (seconds)
 
-# Optional # Each read decrements silence_read by 1, when the counter reaches
-# zero — the token is deleted permanently
+# Optional: read limit
+# Each read decrements the counter
+# When it reaches zero — the token is deleted
 silence_read = 10
 
-CRUDJT.create(data, ttl: ttl, silence_read: silence_read)
-=> "HBmKFXoXgJ46mCqer1WXyQ"
+token = CRUDJT.create(data, ttl: ttl, silence_read: silence_read)
+# token == 'HBmKFXoXgJ46mCqer1WXyQ'
+```
+
+```ruby
+# To disable token expiration or read limits, pass `nil`
+CRUDJT.create({ user_id: 42, role: 11 }, ttl: nil, silence_read: nil)
 ```
 
 # R
 
 ```ruby
-CRUDJT.read("HBmKFXoXgJ46mCqer1WXyQ")
-=> {"metadata"=>{"ttl"=>101001, "silence_read"=>9}, "data"=>{"user_id"=>42, "role"=>11}}
+result = CRUDJT.read('HBmKFXoXgJ46mCqer1WXyQ')
+# result == {'metadata' => {'ttl' => 101001, 'silence_read' => 9}, 'data' => {'user_id' => 42, 'role' => 11}}
 ```
 
 ```ruby
-# when expired/not found token
-CRUD_JT.read("HBmKFXoXgJ46mCqer1WXyQ")
-=> nil
+# When expired or not found token
+result = CRUDJT.read('HBmKFXoXgJ46mCqer1WXyQ')
+# result == nil
 ```
 
 # U
 
 ```ruby
-CRUDJT.update("HBmKFXoXgJ46mCqer1WXyQ", { user_id: 42, role: 8 }, ttl: 600, silence_read: 100)
-=> true # {"metadata"=>{"ttl"=>600, "silence_read"=>100}, "data"=>{"user_id"=>42, "role"=>8}}
+data = { user_id: 42, role: 8 }
+# `nil` disables limits
+ttl = 600
+silence_read = 100
+
+result = CRUDJT.update('HBmKFXoXgJ46mCqer1WXyQ', data, ttl: 600, silence_read: 100)
+# result == true
 ```
 
 ```ruby
-# when expired/not found token
-CRUDJT.update("HBmKFXoXgJ46mCqer1WXyQ", { user_id: 42, role: 8 })
-=> false
+# When expired or not found token
+CRUDJT.update('HBmKFXoXgJ46mCqer1WXyQ', { user_id: 42, role: 8 })
+# result == false
 ```
 
 # D
 ```ruby
-CRUDJT.delete("HBmKFXoXgJ46mCqer1WXyQ")
-=> true
+result = CRUDJT.delete('HBmKFXoXgJ46mCqer1WXyQ')
+# result == true
 ```
 
 ```ruby
-# when expired/not found token
-CRUDJT.delete("HBmKFXoXgJ46mCqer1WXyQ")
-=> false
+# When expired or not found token
+result = CRUDJT.delete('HBmKFXoXgJ46mCqer1WXyQ')
+# result == false
 ```
 
 # Performance
@@ -181,7 +196,7 @@ The library has the following limits and requirements
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="logos/crudjt_favicon_160x160_white_on_dark.svg" width=160 height=160>
     <source media="(prefers-color-scheme: light)" srcset="logos/crudjt_favicon_160x160_dark_on_white.svg" width=160 height=160>
-    <img alt="Shows a black favicon in light color mode and a white one in dark color mode" src="logos/crudjt_favicon_160x160_white.png" width=160 height=160>
+    <img alt="Shows a dark favicon in light color mode and a white one in dark color mode" src="logos/crudjt_favicon_160x160_white.png" width=160 height=160>
   </picture>
 </p>
 
