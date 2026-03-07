@@ -1,6 +1,10 @@
 require 'benchmark'
 require 'crudjt'
 
+if ENV['CRUDJT_AUTOTEST_ALLOWED'] != 'true'
+  return STDOUT.puts "Denied run autotest for this environment. Set ENV['CRUDJT_AUTOTEST_ALLOWED'] = 'true'"
+end
+
 p "OS: #{RbConfig::CONFIG['host_os']}"
 p "CPU: #{RbConfig::CONFIG['host_cpu']}"
 
