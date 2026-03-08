@@ -2,21 +2,30 @@ require_relative 'lib/crudjt/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "crudjt"
-  spec.version       = CrudJt::VERSION
-  spec.authors       = ["v_akymov"]
+  spec.version       = CRUDJT::VERSION
+  spec.authors       = ["Vlad Akymov (v_akymov)"]
   spec.email         = ["support@crudjt.com"]
 
-  spec.summary       = %q{Session. Login / Logout / Authoriztion}
-  spec.description   = %q{Simplifies user session. Login / Logout / Authoriztion}
+  spec.summary       = %q{Fast B-tree–backed token store for stateful sessions}
+  spec.description = <<~DESC
+    Fast B-tree–backed token store for stateful user sessions
+    Provides authentication and authorization across multiple processes
+    Optimized for vertical scaling on a single server
+  DESC
   spec.homepage      = "https://github.com/crudjt"
   spec.license       = "MIT"
   spec.required_ruby_version = Gem::Requirement.new(">= 2.3.0")
 
-  spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
+  spec.metadata["allowed_push_host"] = "https://rubygems.org"
 
-  spec.metadata["homepage_uri"] = 'http://mygemserver.com'
-  spec.metadata["source_code_uri"] = 'http://mygemserver.com'
-  spec.metadata["changelog_uri"] = 'http://mygemserver.com'
+  spec.metadata["homepage_uri"] = spec.homepage
+  spec.metadata["source_code_uri"] = "https://github.com/crudjt/crudjt-ruby"
+  spec.metadata["documentation_uri"] = "https://github.com/crudjt/crudjt-ruby#readme"
+  spec.metadata["changelog_uri"] = "https://github.com/crudjt/crudjt-ruby/blob/master/CHANGELOG.md"
+  spec.metadata["bug_tracker_uri"] = "https://github.com/crudjt/crudjt-ruby/issues"
+  spec.metadata["funding_uri"] = "https://patreon.com/crudjt"
+  spec.metadata["rubygems_mfa_required"] = "true"
+  spec.metadata["keywords"] = "auth, authentication, token, sessions, crud"
 
   spec.add_dependency "ffi", "~> 1.17"
   spec.add_dependency "msgpack", "~> 1.8"
