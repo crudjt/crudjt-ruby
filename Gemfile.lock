@@ -1,0 +1,102 @@
+PATH
+  remote: .
+  specs:
+    crudjt (1.0.0.beta.0)
+      ffi (~> 1.17)
+      grpc (~> 1.78.0)
+      lru_redux (~> 1.1)
+      msgpack (~> 1.8)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    bigdecimal (4.0.1)
+    ffi (1.17.3)
+    ffi (1.17.3-aarch64-linux-gnu)
+    ffi (1.17.3-aarch64-linux-musl)
+    ffi (1.17.3-arm-linux-gnu)
+    ffi (1.17.3-arm-linux-musl)
+    ffi (1.17.3-arm64-darwin)
+    ffi (1.17.3-x86-linux-gnu)
+    ffi (1.17.3-x86-linux-musl)
+    ffi (1.17.3-x86_64-darwin)
+    ffi (1.17.3-x86_64-linux-gnu)
+    ffi (1.17.3-x86_64-linux-musl)
+    google-protobuf (4.34.0)
+      bigdecimal
+      rake (~> 13.3)
+    google-protobuf (4.34.0-aarch64-linux-gnu)
+      bigdecimal
+      rake (~> 13.3)
+    google-protobuf (4.34.0-aarch64-linux-musl)
+      bigdecimal
+      rake (~> 13.3)
+    google-protobuf (4.34.0-arm64-darwin)
+      bigdecimal
+      rake (~> 13.3)
+    google-protobuf (4.34.0-x86-linux-gnu)
+      bigdecimal
+      rake (~> 13.3)
+    google-protobuf (4.34.0-x86-linux-musl)
+      bigdecimal
+      rake (~> 13.3)
+    google-protobuf (4.34.0-x86_64-darwin)
+      bigdecimal
+      rake (~> 13.3)
+    google-protobuf (4.34.0-x86_64-linux-gnu)
+      bigdecimal
+      rake (~> 13.3)
+    google-protobuf (4.34.0-x86_64-linux-musl)
+      bigdecimal
+      rake (~> 13.3)
+    googleapis-common-protos-types (1.22.0)
+      google-protobuf (~> 4.26)
+    grpc (1.78.1)
+      google-protobuf (>= 3.25, < 5.0)
+      googleapis-common-protos-types (~> 1.0)
+    grpc (1.78.1-aarch64-linux-gnu)
+      google-protobuf (>= 3.25, < 5.0)
+      googleapis-common-protos-types (~> 1.0)
+    grpc (1.78.1-aarch64-linux-musl)
+      google-protobuf (>= 3.25, < 5.0)
+      googleapis-common-protos-types (~> 1.0)
+    grpc (1.78.1-arm64-darwin)
+      google-protobuf (>= 3.25, < 5.0)
+      googleapis-common-protos-types (~> 1.0)
+    grpc (1.78.1-x86-linux-gnu)
+      google-protobuf (>= 3.25, < 5.0)
+      googleapis-common-protos-types (~> 1.0)
+    grpc (1.78.1-x86-linux-musl)
+      google-protobuf (>= 3.25, < 5.0)
+      googleapis-common-protos-types (~> 1.0)
+    grpc (1.78.1-x86_64-darwin)
+      google-protobuf (>= 3.25, < 5.0)
+      googleapis-common-protos-types (~> 1.0)
+    grpc (1.78.1-x86_64-linux-gnu)
+      google-protobuf (>= 3.25, < 5.0)
+      googleapis-common-protos-types (~> 1.0)
+    grpc (1.78.1-x86_64-linux-musl)
+      google-protobuf (>= 3.25, < 5.0)
+      googleapis-common-protos-types (~> 1.0)
+    lru_redux (1.1.0)
+    msgpack (1.8.0)
+    rake (13.3.1)
+
+PLATFORMS
+  aarch64-linux-gnu
+  aarch64-linux-musl
+  arm-linux-gnu
+  arm-linux-musl
+  arm64-darwin
+  ruby
+  x86-linux-gnu
+  x86-linux-musl
+  x86_64-darwin
+  x86_64-linux-gnu
+  x86_64-linux-musl
+
+DEPENDENCIES
+  crudjt!
+
+BUNDLED WITH
+   2.6.7

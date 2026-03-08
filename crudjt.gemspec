@@ -18,21 +18,18 @@ Gem::Specification.new do |spec|
   spec.metadata["source_code_uri"] = 'http://mygemserver.com'
   spec.metadata["changelog_uri"] = 'http://mygemserver.com'
 
-  spec.add_dependency "ffi"
-  spec.add_dependency 'msgpack'
-  spec.add_dependency "lru_redux"
-  spec.add_dependency "grpc"
+  spec.add_dependency "ffi", "~> 1.17"
+  spec.add_dependency "msgpack", "~> 1.8"
+  spec.add_dependency "lru_redux", "~> 1.1"
+  spec.add_dependency "grpc", "~> 1.78.0"
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
   spec.files         = Dir.chdir(File.expand_path('..', __FILE__)) do
     `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   end
-  spec.files << "NET_MARKDOWN_README.md"
 
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
-
-  spec.extra_rdoc_files = ["NET_MARKDOWN_README.md"]
 end
