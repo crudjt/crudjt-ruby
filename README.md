@@ -135,7 +135,7 @@ data = { user_id: 42, role: 8 }
 ttl = 600
 silence_read = 100
 
-result = CRUDJT.update('HBmKFXoXgJ46mCqer1WXyQ', data, ttl: 600, silence_read: 100)
+result = CRUDJT.update('HBmKFXoXgJ46mCqer1WXyQ', data, ttl: ttl, silence_read: silence_read)
 # result == true
 ```
 
