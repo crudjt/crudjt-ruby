@@ -11,12 +11,12 @@ module CRUDJT
 
     ERROR_ALREADY_STARTED = 0
     ERROR_NOT_STARTED = 1
-    ERROR_ENCRYPTED_KEY_NOT_SET = 2
+    ERROR_SECRET_KEY_NOT_SET = 2
 
     ERROR_MESSAGES = {
       ERROR_ALREADY_STARTED => 'CRUDJT already started',
       ERROR_NOT_STARTED => 'CRUDJT has not started',
-      ERROR_ENCRYPTED_KEY_NOT_SET => 'Encrypted key is blank'
+      ERROR_SECRET_KEY_NOT_SET => 'Secret key is blank'
     }
 
     def error_message(code)
@@ -39,15 +39,15 @@ module CRUDJT
       raise "Token cant be blank" if token.size < 1
     end
 
-    def validate_encrypted_key!(key)
+    def validate_secret_key!(key)
       begin
         decoded = Base64.strict_decode64(key)
       rescue ArgumentError
-        raise ArgumentError, "'encrypted_key' must be a valid Base64 string"
+        raise ArgumentError, "'secret_key' must be a valid Base64 string"
       end
 
       unless [32, 48, 64].include?(decoded.bytesize)
-        raise ArgumentError, "'encrypted_key' must be exactly 32, 48, or 64 bytes. Got #{decoded.bytesize} bytes"
+        raise ArgumentError, "'secret_key' must be exactly 32, 48, or 64 bytes. Got #{decoded.bytesize} bytes"
       end
 
       true

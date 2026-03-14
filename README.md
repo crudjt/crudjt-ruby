@@ -46,10 +46,10 @@ Only **one process** can do this for a **single token storage**
 The master process manages sessions and coordination    
 All functions can also be used directly from it
 
-### Generate an encrypted key (terminal)
+### Generate a new secret key (terminal)
 
 ```sh
-export CRUDJT_ENCRYPTED_KEY=$(openssl rand -base64 48)
+export CRUDJT_SECRET_KEY=$(openssl rand -base64 48)
 ```
 
 ### Start master (ruby)
@@ -57,14 +57,14 @@ export CRUDJT_ENCRYPTED_KEY=$(openssl rand -base64 48)
 require 'crudjt'
 
 CRUDJT::Config.start_master(
-  encrypted_key: ENV.fetch('CRUDJT_ENCRYPTED_KEY'),
+  secret_key: ENV.fetch('CRUDJT_SECRET_KEY'),
   store_jt_path: 'path/to/local/storage', # optional
   grpc_host: '127.0.0.1', # default
   grpc_port: 50051 # default
 )
 ```
 
-*Important: Use the same `encrypted_key` across all sessions. If the key changes, previously stored tokens cannot be decrypted and will return `nil` or `false`*  
+*Important: Use the same `secret_key` across all sessions. If the key changes, previously stored tokens cannot be decrypted and will return `nil` or `false`*  
 
 ## Start CRUDJT master in Docker
 > `docker-compose.yml` will be published after 1.0.0-beta Docker image builds
@@ -188,8 +188,8 @@ The library has the following limits and requirements
 - **Ruby version:** tested with 2.7
 - **Supported platforms:** Linux, macOS (x86_64 / arm64). Windows (experimental, x86_64 / arm64)
 - **Maximum json size per token:** 256 bytes
-- **`encrypted_key` format:** must be Base64
-- **`encrypted_key` size:** must be 32, 48, or 64 bytes
+- **`secret_key` format:** must be Base64
+- **`secret_key` size:** must be 32, 48, or 64 bytes
 
 # Contact & Support
 <p align="center">

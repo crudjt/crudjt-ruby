@@ -58,14 +58,14 @@ module CRUDJT
     @settings = {}
 
     class << self
-      def check_encrypted_key
-        @settings[:encrypted_key]
+      def check_secret_key
+        @settings[:secret_key]
       end
 
-      def encrypted_key(value)
-        CRUDJT::Validation.validate_encrypted_key!(value)
+      def secret_key(value)
+        CRUDJT::Validation.validate_secret_key!(value)
 
-        @settings[:encrypted_key] = value
+        @settings[:secret_key] = value
         self
       end
 
@@ -83,16 +83,15 @@ module CRUDJT
 
       def start_master(options = {})
         raise CRUDJT::Validation.error_message(CRUDJT::Validation::ERROR_ALREADY_STARTED) if was_started
-        raise CRUDJT::Validation.error_message(CRUDJT::Validation::ERROR_ENCRYPTED_KEY_NOT_SET) unless options[:encrypted_key]
+        raise CRUDJT::Validation.error_message(CRUDJT::Validation::ERROR_SECRET_KEY_NOT_SET) unless options[:secret_key]
 
-        CRUDJT::Validation.validate_encrypted_key!(options[:encrypted_key])
+        CRUDJT::Validation.validate_secret_key!(options[:secret_key])
 
-        @settings[:encrypted_key] = options[:encrypted_key]
         @settings[:store_jt_path] = options[:store_jt_path]
         @settings[:grpc_host] = options[:grpc_host] || GRPC_HOST
         @settings[:grpc_port] = options[:grpc_port] || GRPC_PORT
 
-        result = JSON(start_store_jt(@settings[:encrypted_key], @settings[:store_jt_path]))
+        result = JSON(start_store_jt(options[:secret_key], @settings[:store_jt_path]))
         raise CRUDJT::ERRORS[result['code']], result['error_message'] unless result['ok']
 
         port = "#{@settings[:grpc_host]}:#{@settings[:grpc_port]}"

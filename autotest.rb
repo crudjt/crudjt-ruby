@@ -8,31 +8,31 @@ end
 p "OS: #{RbConfig::CONFIG['host_os']}"
 p "CPU: #{RbConfig::CONFIG['host_cpu']}"
 
-p 'Checking encrypted key validations...'
-# when started without encrypted key
+p 'Checking secret key validations...'
+# when started without secret key
 begin
   CRUDJT::Config.start_master
 rescue RuntimeError => error
-  p error.message == CRUDJT::Validation.error_message(CRUDJT::Validation::ERROR_ENCRYPTED_KEY_NOT_SET)
+  p error.message == CRUDJT::Validation.error_message(CRUDJT::Validation::ERROR_SECRET_KEY_NOT_SET)
 else
   p false
 end
 
-# when started with fake base64 encrypted key
+# when started with fake base64 secret key
 begin
-  CRUDJT::Config.start_master(encrypted_key: 'bla-bla-bla')
+  CRUDJT::Config.start_master(secret_key: 'bla-bla-bla')
 rescue ArgumentError => error
-  p error.message == "'encrypted_key' must be a valid Base64 string"
+  p error.message == "'secret_key' must be a valid Base64 string"
 else
   p false
 end
 
-# when started with wrong encrypted key lenght
+# when started with wrong secret key lenght
 begin
   key_16_bytes = '2v+XIslTkPTfjva0xeCLHQ=='
-  CRUDJT::Config.start_master(encrypted_key: key_16_bytes)
+  CRUDJT::Config.start_master(secret_key: key_16_bytes)
 rescue ArgumentError => error
-  p error.message == "'encrypted_key' must be exactly 32, 48, or 64 bytes. Got #{Base64.strict_decode64(key_16_bytes).bytesize} bytes"
+  p error.message == "'secret_key' must be exactly 32, 48, or 64 bytes. Got #{Base64.strict_decode64(key_16_bytes).bytesize} bytes"
 else
   p false
 end
@@ -58,7 +58,7 @@ else
 end
 
 CRUDJT::Config.start_master(
-  encrypted_key: 'Cm7B68NWsMNNYjzMDREacmpe5sI1o0g40ZC9w1yQW3WOes7Gm59UsittLOHR2dciYiwmaYq98l3tG8h9yXVCxg=='
+  secret_key: 'Cm7B68NWsMNNYjzMDREacmpe5sI1o0g40ZC9w1yQW3WOes7Gm59UsittLOHR2dciYiwmaYq98l3tG8h9yXVCxg=='
 )
 
 p "Master: #{CRUDJT::Config.master?}"
@@ -162,7 +162,7 @@ values = []
   p 'Checking scale load...'
 
   # when create
-  p 'when creates 40k tokens with Turbo Queue'
+  p 'when creates 40k tokens'
   puts Benchmark.measure { REQUESTS.times { |i| tokens << CRUDJT.create(data) } }
 
   # when read
