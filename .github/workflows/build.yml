@@ -33,7 +33,7 @@ jobs:
         bundle exec rake build
 
     - name: Install gem
-      run: gem install pkg/crudjt-1.0.0.beta.0.gem --force
+      run: gem install pkg/crudjt-1.0.0.pre.beta.0.gem --force
 
     - name: Run autotest
       env:
