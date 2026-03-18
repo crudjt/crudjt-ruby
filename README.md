@@ -25,11 +25,11 @@ Optimized for vertical scaling on a single server
 
 With Bundler:  
 ```sh
-bundle add crudjt
+bundle add crudjt --pre
 ```
 Or via RubyGems:  
 ```sh
-gem install crudjt
+gem install crudjt --pre
 ```
 
 ## How to use
