@@ -92,6 +92,9 @@ docker-compose up -d
 ```
 *Ensure the secrets directory contains your secret key file at `./crudjt_secrets/secret_key.txt`*
 
+For configuration details and image versions, see the
+[CRUDJT Server on Docker Hub](https://hub.docker.com/r/coffeemainer/crudjt-server)
+
 ## Connect to an existing CRUDJT master
 
 Use this in all other processes  
