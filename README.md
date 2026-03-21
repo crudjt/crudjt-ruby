@@ -67,7 +67,30 @@ CRUDJT::Config.start_master(
 *Important: Use the same `secret_key` across all sessions. If the key changes, previously stored tokens cannot be decrypted and will return `nil` or `false`*  
 
 ## Start CRUDJT master in Docker
-> `docker-compose.yml` will be published after 1.0.0-beta Docker image builds
+Create a `docker-compose.yml` file:
+
+```yml
+services:
+  crudjt-server:
+    image: coffeemainer/crudjt-server:beta
+    restart: unless-stopped
+
+    ports:
+      - "${CRUDJT_CLIENT_PORT:-50051}:50051"
+
+    volumes:
+      - "${STORE_JT:-./store_jt}:/app/store_jt"
+      - "${CRUDJT_SECRETS:-./crudjt_secrets}:/app/secrets"
+
+    environment:
+      CRUDJT_DOCKER_HOST: 0.0.0.0
+      CRUDJT_DOCKER_PORT: 50051
+```
+Start the server:
+```bash
+docker-compose up -d
+```
+*Ensure the secrets directory contains your secret key file at `./crudjt_secrets/secret_key.txt`*
 
 ## Connect to an existing CRUDJT master
 
