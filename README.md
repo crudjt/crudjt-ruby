@@ -186,7 +186,7 @@ result = CRUDJT.delete('HBmKFXoXgJ46mCqer1WXyQ')
 ```
 
 # Performance
-**40k** requests of **256 bytes** — median over 10 runs  
+**40k** requests of **256 bytes** each — median over 10 runs  
 ARM64 (Apple M1+), macOS 15.7.4  
 Ruby 3.4.4
 
