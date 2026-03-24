@@ -202,7 +202,12 @@ Ruby 3.4.4
 # Storage (File-backed)  
 
 ## Disk footprint  
-> Metrics will be published after 1.0.0-beta GitHub Actions builds
+**40k** tokens of **256 bytes** each — median over 10 creates  
+darwin23, APFS  
+
+`48 MB`  
+
+[Full disk footprint results](https://github.com/crudjt/disk_footprint)
 
 ## Path Lookup Order
 Stored tokens are placed in the **file system** according to the following order
