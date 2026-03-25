@@ -186,7 +186,7 @@ result = CRUDJT.delete('HBmKFXoXgJ46mCqer1WXyQ')
 ```
 
 # Performance
-40 000 requests up to 256 bytes — median over 10 runs  
+**40 000** requests up to **256 bytes** — median over 10 runs  
 macOS 15.7.4, ARM64 (Apple M1)  
 Ruby 3.4.4  
 In-process benchmark; Redis accessed via localhost TCP  
