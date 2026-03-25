@@ -203,7 +203,7 @@ In-process benchmark; Redis accessed via localhost TCP
 # Storage (File-backed)  
 
 ## Disk footprint  
-**40k** tokens of **256 bytes** each — median over 10 creates  
+**40 000** tokens of **256 bytes** each — median over 10 creates  
 darwin23, APFS  
 
 `48 MB`  
