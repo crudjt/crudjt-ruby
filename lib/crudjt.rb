@@ -26,7 +26,7 @@ def load_store_jt_library
    arch = case RbConfig::CONFIG['host_cpu']
         when /x86_64|x64/
           'x86_64'
-        when /arm|arm64/
+        when /arm|arm64|aarch64/
           'arm64'
         else
           raise "Unsupported architecture: #{RbConfig::CONFIG['host_cpu']}"
