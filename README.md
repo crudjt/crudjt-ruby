@@ -14,9 +14,6 @@
   </a>
 </p>
 
-> ⚠️ Version 1.0.0-beta — production testing phase   
-> API is stable. Feedback is welcome before the final 1.0.0 release
-
 Fast B-tree–backed token store for stateful user sessions  
 Provides authentication and authorization across multiple processes  
 Optimized for vertical scaling on a single server  
@@ -25,11 +22,11 @@ Optimized for vertical scaling on a single server
 
 With Bundler:  
 ```sh
-bundle add crudjt --pre
+bundle add crudjt
 ```
 Or via RubyGems:  
 ```sh
-gem install crudjt --pre
+gem install crudjt
 ```
 
 ## How to use

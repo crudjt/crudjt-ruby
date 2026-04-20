@@ -26,14 +26,8 @@ jobs:
         bundler-cache: true
         cache-version: 2
 
-    - name: Install dependencies and build gem
-      run: |
-        gem install bundler --no-document
-        bundle install
-        bundle exec rake build
-
     - name: Install gem
-      run: gem install pkg/crudjt-1.0.0.pre.beta.0.gem --force
+      run: gem install crudjt
 
     - name: Run autotest
       env:
