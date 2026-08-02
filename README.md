@@ -21,9 +21,9 @@ Provides authentication and authorization across multiple processes
 Optimized for vertical scaling on a single server  
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/crudjt/crudjt/refs/heads/master/logos/ruby_sdk_schema_white_on_dark.svg">
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/crudjt/crudjt/refs/heads/master/logos/ruby_sdk_schema_dark_on_white.svg">
-  <img alt="Shows a dark schema" src="https://raw.githubusercontent.com/crudjt/crudjt/refs/heads/master/logos/ruby_sdk_schema_white_on_dark.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/crudjt/crudjt/refs/heads/master/schemas/ruby_sdk_schema_white_on_dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/crudjt/crudjt/refs/heads/master/schemas/ruby_sdk_schema_dark_on_white.svg">
+  <img alt="Shows a dark schema" src="https://raw.githubusercontent.com/crudjt/crudjt/refs/heads/master/schemas/ruby_sdk_schema_white_on_dark.svg">
 </picture>
 
 # Installation
