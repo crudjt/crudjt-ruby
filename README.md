@@ -118,14 +118,7 @@ CRUDJT::Config.connect_to_master(
   grpc_host: '127.0.0.1', # default
   grpc_port: 50051 # default
 )
-```
-
-### Process layout
-
-App boot  
- ├─ Process A → start_master  
- ├─ Process B → connect_to_master  
- └─ Process C → connect_to_master  
+```  
 
 # C
 
